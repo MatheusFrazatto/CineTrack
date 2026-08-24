@@ -1,0 +1,61 @@
+/*
+Cores:
+    Primária: #2D3142
+    Acento:   #C0392B
+    Neutro:   #F7F7F7 (fundo) e #333333 (texto)
+*/
+
+/* 1. Reset da Aula 1 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: #2D3142;
+  background: #f7f7f7;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+/* 2. Estilo do Header e Botão de Ação */
+header {
+  background: #2D3142;
+  color: #FFFFFF;
+  padding: 12px 16px;
+}
+
+header button,
+.addbutton {
+  background: #C0392B;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+/* 3. Estilo dos Cards */
+.card {
+  margin-top: 16px;
+  background: #FFFFFF;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px #0002;
+  color: #2D3142;
+}
