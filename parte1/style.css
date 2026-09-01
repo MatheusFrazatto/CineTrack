@@ -31,14 +31,23 @@ img {
 button {
   font: inherit;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 /* 2. Estilo do Header e Botão de Ação */
 header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
   background: #2D3142;
   color: #FFFFFF;
   padding: 12px 16px;
 }
+
+header h1 {flex: 0 0 auto;}
+header input {flex: 1 1 240px;}
 
 header button,
 .addbutton {
@@ -49,8 +58,30 @@ header button,
   border-radius: 6px;
 }
 
+nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 24px;
+}
+
+nav button {
+  padding: 6px 14px;
+  border: 1px solid #C0392B;
+  background: #ddd;
+  border-radius: 50px;
+}
+
+nav button.ativo {
+  background: #828282;
+  color: #FFFFFF;
+}
+
 /* 3. Estilo dos Cards */
 .card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   margin-top: 16px;
   background: #FFFFFF;
   padding: 16px;
@@ -58,4 +89,27 @@ header button,
   border-radius: 8px;
   box-shadow: 0 1px 4px #0002;
   color: #2D3142;
+  width: 200px;
+}
+
+.card .acoes {
+  margin-top: auto;
+  display: flex;
+  gap: 8px;
+}
+
+#lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 24px;
+}
+
+.card .badge {
+  display: inline-block;
+  background-color: #ededed; /* ou #ddd */
+  border-radius: 999px;      /* Cria o formato de pílula */
+  padding: 4px 12px;         /* Espaço interno essencial */
+  font-size: 0.85rem;
+  color: #333333;
 }
