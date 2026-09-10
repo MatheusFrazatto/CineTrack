@@ -1,11 +1,59 @@
 /*
-Cores:
+Cores Base:
     Primária: #2D3142
     Acento:   #C0392B
     Neutro:   #F7F7F7 (fundo) e #333333 (texto)
 */
 
-/* 1. Reset da Aula 1 */
+/* 1. Variáveis Globais (:root) */
+:root {
+  --cor-fundo: #f7f7f7;
+  --cor-card: #ffffff;
+  --cor-texto: #2D3142;
+  --cor-texto-secundario: #555555;
+  --cor-primaria: #2D3142;
+  --cor-acento: #C0392B;
+  --cor-borda: #dddddd;
+  --cor-input-fundo: #ffffff;
+  
+  --raio: 8px;
+  --raio-sm: 4px;
+  --raio-lg: 12px;
+  --raio-pilula: 999px;
+  --espaco: 16px;
+
+  /* Cores semânticas dos badges (Tema Claro) */
+  --badge-assistido-bg: #e6f4ea;
+  --badge-assistido-texto: #137333;
+  --badge-assistindo-bg: #e8f0fe;
+  --badge-assistindo-texto: #1967d2;
+  --badge-quero-bg: #fef7e0;
+  --badge-quero-texto: #b06000;
+}
+
+/* 2. Tema Escuro Automático (Dark Mode) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cor-fundo: #121212;
+    --cor-card: #1e1e1e;
+    --cor-texto: #f3f3f3;
+    --cor-texto-secundario: #aaaaaa;
+    --cor-primaria: #1e2230;
+    --cor-acento: #C0392B;
+    --cor-borda: #333333;
+    --cor-input-fundo: #252525;
+
+    /* Cores semânticas dos badges (Tema Escuro) */
+    --badge-assistido-bg: #133924;
+    --badge-assistido-texto: #81c995;
+    --badge-assistindo-bg: #17325c;
+    --badge-assistindo-texto: #8ab4f8;
+    --badge-quero-bg: #4a3800;
+    --badge-quero-texto: #fdd663;
+  }
+}
+
+/* 3. Reset Global */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -19,8 +67,8 @@ html {
 body {
   font-family: system-ui, sans-serif;
   line-height: 1.5;
-  color: #2D3142;
-  background: #f7f7f7;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
 }
 
 img {
@@ -28,22 +76,43 @@ img {
   display: block;
 }
 
+/* Estilo e transições padrão de botões */
 button {
   font: inherit;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: var(--raio-sm);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, outline 0.2s ease, transform 0.15s ease;
 }
 
-/* 2. Estilo do Header e Botão de Ação */
+button:hover {
+  background: var(--cor-primaria);
+  color: #FFFFFF;
+}
+
+button:active {
+  filter: brightness(0.85);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:focus-visible {
+  outline: 3px solid #4A90E2;
+  outline-offset: 2px;
+}
+
+/* 4. Estilo do Header */
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--espaco);
   flex-wrap: wrap;
-  background: #2D3142;
+  background: var(--cor-primaria);
   color: #FFFFFF;
-  padding: 12px 16px;
+  padding: 12px var(--espaco);
 }
 
 header h1 {
@@ -54,20 +123,38 @@ header h1 {
 header input {
   flex: 1 1 240px;
   padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  background-color: var(--cor-input-fundo);
+  color: var(--cor-texto);
 }
 
 header button,
-.addbutton {
-  background: #C0392B;
+.btn-salvar {
+  background: var(--cor-acento);
   color: #FFFFFF;
   border: none;
-  padding: 8px 16px;
+  padding: 8px var(--espaco);
   border-radius: 6px;
 }
 
-/* Base Mobile: exibe apenas o "+" */
+header button:hover,
+.btn-salvar:hover {
+  background: #a93226;
+  color: #FFFFFF;
+}
+
+.link-voltar {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.link-voltar:hover {
+  text-decoration: underline;
+}
+
+/* Rótulos responsivos do botão de adicionar */
 .rotulo-completo {
   display: none;
 }
@@ -76,7 +163,7 @@ header button,
   display: inline;
 }
 
-/* 3. Filtros de Navegação */
+/* 5. Filtros de Navegação */
 nav {
   display: flex;
   gap: 8px;
@@ -86,35 +173,35 @@ nav {
 
 nav button {
   padding: 6px 14px;
-  border: 1px solid #2D3142;
-  background: #ffffff;
-  border-radius: 50px;
-  color: #2D3142;
+  border: 1px solid var(--cor-primaria);
+  background: var(--cor-card);
+  border-radius: var(--raio-pilula);
+  color: var(--cor-texto);
 }
 
 nav button.ativo {
-  background: #2D3142;
+  background: var(--cor-primaria);
   color: #FFFFFF;
 }
 
-/* 4. Grade de Cards (Grid Responsivo da Aula 3) */
+/* 6. Grade de Cards (Grid Responsivo) */
 #lista {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 16px 24px;
+  gap: var(--espaco);
+  padding: var(--espaco) 24px;
 }
 
 .card {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background: #FFFFFF;
-  padding: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px #0002;
-  color: #2D3142;
+  background: var(--cor-card);
+  padding: var(--espaco);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  color: var(--cor-texto);
 }
 
 .card img {
@@ -127,21 +214,37 @@ nav button.ativo {
 .card h2 {
   font-size: 1.15rem;
   margin-top: 4px;
+  color: var(--cor-texto);
 }
 
 .card p {
   font-size: 0.9rem;
-  color: #444444;
+  color: var(--cor-texto-secundario);
 }
 
+/* Badges e variações semânticas */
 .card .badge {
   display: inline-block;
   align-self: flex-start;
-  background-color: #ededed;
-  border-radius: 999px;
+  border-radius: var(--raio-pilula);
   padding: 4px 12px;
   font-size: 0.85rem;
-  color: #333333;
+  font-weight: 500;
+}
+
+.badge.assistido {
+  background-color: var(--badge-assistido-bg);
+  color: var(--badge-assistido-texto);
+}
+
+.badge.assistindo {
+  background-color: var(--badge-assistindo-bg);
+  color: var(--badge-assistindo-texto);
+}
+
+.badge.quero {
+  background-color: var(--badge-quero-bg);
+  color: var(--badge-quero-texto);
 }
 
 .card .acoes {
@@ -154,21 +257,135 @@ nav button.ativo {
 .card .acoes button {
   flex: 1;
   padding: 6px 8px;
-  border: 1px solid #2D3142;
-  background: #ffffff;
-  border-radius: 4px;
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-card);
+  color: var(--cor-texto);
+  border-radius: var(--raio-sm);
   font-size: 0.85rem;
 }
 
-/* 5. Rodapé */
+/* 7. Estilos de Formulário (Modal e adicionar.html) */
+.pagina-adicionar {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco);
+  margin-top: var(--espaco);
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+form label {
+  font-size: 0.95rem;
+  color: var(--cor-texto);
+}
+
+form input,
+form select,
+form textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  background-color: var(--cor-input-fundo);
+  color: var(--cor-texto);
+  font: inherit;
+  transition: border-color 0.2s ease, outline 0.2s ease;
+}
+
+form input:focus-visible,
+form select:focus-visible,
+form textarea:focus-visible {
+  outline: 2px solid var(--cor-acento);
+  outline-offset: 1px;
+}
+
+/* Pseudo-classes de validação do formulário */
+input:required {
+  border-left: 3px solid var(--cor-acento);
+}
+
+input:invalid:not(:placeholder-shown) {
+  border-color: var(--cor-acento);
+}
+
+input:valid {
+  border-color: #2e7d32;
+}
+
+.form-acoes {
+  display: flex;
+  flex-direction: row !important;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-cancelar {
+  flex: 1;
+  padding: 8px var(--espaco);
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-card);
+  color: var(--cor-texto);
+}
+
+/* 8. Estrutura e Animação do Modal */
+#modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* Garante que o display: flex não quebre o atributo hidden */
+#modal[hidden] {
+  display: none;
+}
+
+.modal-conteudo {
+  background: var(--cor-card);
+  color: var(--cor-texto);
+  padding: 24px;
+  border-radius: var(--raio-lg);
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: aparecer 200ms ease;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 9. Rodapé */
 footer {
   padding: 24px;
   text-align: center;
-  color: #666;
+  color: var(--cor-texto-secundario);
 }
 
 footer a {
-  color: #C0392B;
+  color: var(--cor-acento);                                           
   text-decoration: none;
 }
 
@@ -176,9 +393,8 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* 6. Media Query para Telas Maiores (>= 1024px) */
+/* 10. Media Query para Telas Maiores (>= 1024px) */
 @media (min-width: 1024px) {
-  /* Alterna para o rótulo completo do botão */
   .rotulo-curto {
     display: none;
   }
@@ -187,7 +403,6 @@ footer a:hover {
     display: inline;
   }
 
-  /* Aumenta o espaçamento da grade */
   #lista {
     gap: 24px;
     padding: 24px 32px;

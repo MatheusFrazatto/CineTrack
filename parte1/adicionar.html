@@ -10,42 +10,42 @@
 
     <!-- Navegação de volta e cabeçalho -->
     <header>
-        <a href="index.html" style="color: #ffffff; text-decoration: none;">&larr; Voltar</a>
+        <a href="index.html" class="link-voltar">&larr; Voltar</a>
         <h1>Adicionar filme</h1>
     </header>
 
     <!-- Formulário de cadastro -->
-    <main style="padding: 24px; max-width: 600px; margin: 0 auto;">
-        <form id="form-filme" action="#" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+    <main class="pagina-adicionar">
+        <form id="form-filme" action="#" method="POST">
             
             <!-- 1. Título -->
             <div>
-                <label for="titulo"><strong>Título</strong></label><br>
-                <input type="text" id="titulo" name="titulo" required style="width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px;">
+                <label for="titulo"><strong>Título</strong></label>
+                <input type="text" id="titulo" name="titulo" required>
             </div>
 
             <!-- 2. Ano -->
             <div>
-                <label for="ano"><strong>Ano</strong></label><br>
-                <input type="number" id="ano" name="ano" min="1888" max="2030" required style="width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px;">
+                <label for="ano"><strong>Ano</strong></label>
+                <input type="number" id="ano" name="ano" min="1888" max="2030" required>
             </div>
 
             <!-- 3. Gênero -->
             <div>
-                <label for="genero"><strong>Gênero</strong></label><br>
-                <input type="text" id="genero" name="genero" required style="width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px;">
+                <label for="genero"><strong>Gênero</strong></label>
+                <input type="text" id="genero" name="genero" required>
             </div>
 
             <!-- 4. Pôster -->
             <div>
-                <label for="poster"><strong>URL do pôster</strong></label><br>
-                <input type="url" id="poster" name="poster" style="width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px;">
+                <label for="poster"><strong>URL do pôster</strong></label>
+                <input type="url" id="poster" name="poster">
             </div>
 
             <!-- 5. Status -->
             <div>
-                <label for="status"><strong>Status</strong></label><br>
-                <select id="status" name="status" required style="width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px;">
+                <label for="status"><strong>Status</strong></label>
+                <select id="status" name="status" required>
                     <option value="quero_assistir">Quero assistir</option>
                     <option value="assistindo">Assistindo</option>
                     <option value="assistido">Assistido</option>
@@ -54,20 +54,20 @@
 
             <!-- 6. Nota -->
             <div>
-                <label for="nota"><strong>Nota (1 a 5)</strong></label><br>
-                <input type="number" id="nota" name="nota" min="1" max="5" style="width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px;">
+                <label for="nota"><strong>Nota (1 a 5)</strong></label>
+                <input type="number" id="nota" name="nota" min="1" max="5">
             </div>
 
             <!-- 7. Comentário -->
             <div>
-                <label for="comentario"><strong>Comentário</strong></label><br>
-                <textarea id="comentario" name="comentario" rows="4" style="width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+                <label for="comentario"><strong>Comentário</strong></label>
+                <textarea id="comentario" name="comentario" rows="4"></textarea>
             </div>
 
             <!-- Ações -->
-            <div style="display: flex; gap: 12px; margin-top: 8px;">
-                <button type="button" onclick="history.back()" style="padding: 8px 16px; border: 1px solid #ccc; background: #eee;">Cancelar</button>
-                <button type="submit" style="padding: 8px 16px; background: #C0392B; color: #fff; border: none;">Salvar</button>
+            <div class="form-acoes">
+                <button type="button" class="btn-cancelar" onclick="history.back()">Cancelar</button>
+                <button type="submit" class="btn-salvar">Salvar</button>
             </div>
 
         </form>
