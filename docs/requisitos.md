@@ -6,8 +6,8 @@ Cada filme cadastrado no sistema possui os seguintes 7 campos:
 2. **Ano**: Ano de lançamento (número).
 3. **Gênero**: Categoria/gênero cinematográfico (texto/seleção).
 4. **Pôster**: URL da imagem da capa do filme (texto).
-5. **Status**: Situação do filme (*Assistido* ou *Quero Assistir*).
-6. **Nota**: Avaliação do usuário de 1 a 5 estrelas ou 1 a 10 (número).
+5. **Status**: Situação do filme (*Assistido*, *Assistindo* ou *Quero assistir*).
+6. **Nota**: Avaliação do usuário de 1 a 5 estrelas (número).
 7. **Comentário**: Análise ou observações pessoais do usuário (texto).
 
 ---
@@ -15,7 +15,7 @@ Cada filme cadastrado no sistema possui os seguintes 7 campos:
 ## 2. Áreas da Interface
 A interface principal da aplicação é dividida em 4 áreas principais:
 1. **Busca por Título**: Campo de texto para pesquisa dinâmica de filmes pelo nome.
-2. **Filtros de Status**: Botões/seletor para filtrar a exibição por filmes *Todos*, *Assistidos* ou *Quero Assistir*.
+2. **Filtros de Status**: Botões para filtrar a exibição por filmes *Todos*, *Assistidos*, *Assistindo* ou *Quero assistir*.
 3. **Lista de Filmes**: Grade/cards apresentando a coleção de filmes cadastrados.
 4. **Formulário de Cadastro**: Seção/modal contendo os campos para inserção de novos filmes.
 

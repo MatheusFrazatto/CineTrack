@@ -13,8 +13,15 @@ Cores Base:
   --cor-texto-secundario: #555555;
   --cor-primaria: #2D3142;
   --cor-acento: #C0392B;
+  --cor-acento-hover: #A93226;
   --cor-borda: #dddddd;
   --cor-input-fundo: #ffffff;
+  --cor-texto-inverso: #ffffff;
+  --cor-foco: #4A90E2;
+  --cor-sucesso: #2E7D32;
+  --cor-sombra: rgba(0, 0, 0, 0.1);
+  --cor-sombra-modal: rgba(0, 0, 0, 0.3);
+  --cor-overlay: rgba(0, 0, 0, 0.5);
   
   --raio: 8px;
   --raio-sm: 4px;
@@ -28,7 +35,7 @@ Cores Base:
   --badge-assistindo-bg: #e8f0fe;
   --badge-assistindo-texto: #1967d2;
   --badge-quero-bg: #fef7e0;
-  --badge-quero-texto: #b06000;
+  --badge-quero-texto: #9c4f00;
 }
 
 /* 2. Tema Escuro Automático (Dark Mode) */
@@ -40,8 +47,14 @@ Cores Base:
     --cor-texto-secundario: #aaaaaa;
     --cor-primaria: #1e2230;
     --cor-acento: #C0392B;
+    --cor-acento-hover: #A93226;
     --cor-borda: #333333;
     --cor-input-fundo: #252525;
+    --cor-foco: #8AB4F8;
+    --cor-sucesso: #81C995;
+    --cor-sombra: rgba(0, 0, 0, 0.3);
+    --cor-sombra-modal: rgba(0, 0, 0, 0.55);
+    --cor-overlay: rgba(0, 0, 0, 0.7);
 
     /* Cores semânticas dos badges (Tema Escuro) */
     --badge-assistido-bg: #133924;
@@ -86,7 +99,7 @@ button {
 
 button:hover {
   background: var(--cor-primaria);
-  color: #FFFFFF;
+  color: var(--cor-texto-inverso);
 }
 
 button:active {
@@ -99,7 +112,7 @@ button:disabled {
 }
 
 button:focus-visible {
-  outline: 3px solid #4A90E2;
+  outline: 3px solid var(--cor-foco);
   outline-offset: 2px;
 }
 
@@ -111,7 +124,7 @@ header {
   gap: var(--espaco);
   flex-wrap: wrap;
   background: var(--cor-primaria);
-  color: #FFFFFF;
+  color: var(--cor-texto-inverso);
   padding: 12px var(--espaco);
 }
 
@@ -132,7 +145,7 @@ header input {
 header button,
 .btn-salvar {
   background: var(--cor-acento);
-  color: #FFFFFF;
+  color: var(--cor-texto-inverso);
   border: none;
   padding: 8px var(--espaco);
   border-radius: 6px;
@@ -140,12 +153,12 @@ header button,
 
 header button:hover,
 .btn-salvar:hover {
-  background: #a93226;
-  color: #FFFFFF;
+  background: var(--cor-acento-hover);
+  color: var(--cor-texto-inverso);
 }
 
 .link-voltar {
-  color: #FFFFFF;
+  color: var(--cor-texto-inverso);
   text-decoration: none;
   font-weight: 500;
 }
@@ -181,7 +194,7 @@ nav button {
 
 nav button.ativo {
   background: var(--cor-primaria);
-  color: #FFFFFF;
+  color: var(--cor-texto-inverso);
 }
 
 /* 6. Grade de Cards (Grid Responsivo) */
@@ -200,7 +213,7 @@ nav button.ativo {
   padding: var(--espaco);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px var(--cor-sombra);
   color: var(--cor-texto);
 }
 
@@ -264,6 +277,12 @@ nav button.ativo {
   font-size: 0.85rem;
 }
 
+.card .acoes button:hover {
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-texto-inverso);
+}
+
 /* 7. Estilos de Formulário (Modal e adicionar.html) */
 .pagina-adicionar {
   padding: 24px;
@@ -319,7 +338,7 @@ input:invalid:not(:placeholder-shown) {
 }
 
 input:valid {
-  border-color: #2e7d32;
+  border-color: var(--cor-sucesso);
 }
 
 .form-acoes {
@@ -341,7 +360,7 @@ input:valid {
 #modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--cor-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -362,7 +381,7 @@ input:valid {
   max-width: 420px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px var(--cor-sombra-modal);
   animation: aparecer 200ms ease;
 }
 
