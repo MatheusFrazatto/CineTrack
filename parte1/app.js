@@ -103,9 +103,19 @@ const filmesIniciais = [
   },
 ];
 
-let filmes = [...filmesIniciais];
+const CHAVE = "cinetrack:filmes";
+
+function carregar() {
+  const filmesSalvos = localStorage.getItem(CHAVE);
+  return filmesSalvos ? JSON.parse(filmesSalvos) : [...filmesIniciais];
+}
+
+let filmes = carregar();
+let termoAtual = "";
+let statusAtual = "todos";
 const listaFilmes = document.querySelector("#lista");
 const navFiltros = document.querySelector("nav");
+const busca = document.querySelector("header input");
 const modal = document.querySelector("#modal");
 const form = document.querySelector("#form-filme");
 const botaoAdicionar = document.querySelector(".btn-adicionar");
@@ -114,6 +124,30 @@ let editandoId = null;
 
 const gerarId = (lista) =>
   Math.max(0, ...lista.map((filme) => filme.id)) + 1;
+
+const salvar = () => {
+  localStorage.setItem(CHAVE, JSON.stringify(filmes));
+};
+
+function aplicarFiltros(lista, opcoes) {
+  const termo = opcoes.termo.toLowerCase();
+
+  return lista
+    .filter((filme) => filme.titulo.toLowerCase().includes(termo))
+    .filter(
+      (filme) =>
+        opcoes.status === "todos" || filme.status === opcoes.status,
+    );
+}
+
+function debounce(fn, ms = 300) {
+  let timer;
+
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), ms);
+  };
+}
 
 const abrir = () => {
   modal.hidden = false;
@@ -175,7 +209,16 @@ function renderizarCards(lista) {
   listaFilmes.replaceChildren(fragmento);
 }
 
-renderizarCards(filmes);
+function atualizar() {
+  const filmesVisiveis = aplicarFiltros(filmes, {
+    termo: termoAtual,
+    status: statusAtual,
+  });
+
+  renderizarCards(filmesVisiveis);
+}
+
+atualizar();
 
 listaFilmes.addEventListener("click", (evento) => {
   const botaoEditar = evento.target.closest(".btn-editar");
@@ -204,7 +247,8 @@ listaFilmes.addEventListener("click", (evento) => {
   const id = Number(card.dataset.id);
 
   filmes = filmes.filter((filme) => filme.id !== id);
-  renderizarCards(filmes);
+  salvar();
+  atualizar();
 });
 
 navFiltros.addEventListener("click", (evento) => {
@@ -216,14 +260,16 @@ navFiltros.addEventListener("click", (evento) => {
     .forEach((botao) => botao.classList.remove("ativo"));
   botaoFiltro.classList.add("ativo");
 
-  const status = botaoFiltro.dataset.status;
-  const filmesFiltrados =
-    status === "todos"
-      ? filmes
-      : filmes.filter((filme) => filme.status === status);
-
-  renderizarCards(filmesFiltrados);
+  statusAtual = botaoFiltro.dataset.status;
+  atualizar();
 });
+
+const aoDigitar = (evento) => {
+  termoAtual = evento.target.value;
+  atualizar();
+};
+
+busca.addEventListener("input", debounce(aoDigitar, 300));
 
 botaoAdicionar.addEventListener("click", () => {
   editandoId = null;
@@ -260,7 +306,8 @@ form.addEventListener("submit", (evento) => {
     filmes = [...filmes, { id: gerarId(filmes), ...dados }];
   }
 
-  renderizarCards(filmes);
+  salvar();
+  atualizar();
   fechar();
 });
 
