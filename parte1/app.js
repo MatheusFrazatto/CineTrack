@@ -89,6 +89,10 @@ const filmesIniciais = [
   },
 ];
 
+let filmes = [...filmesIniciais];
+const listaFilmes = document.querySelector("#lista");
+const navFiltros = document.querySelector("nav");
+
 function renderizarCards(lista) {
   const cards = lista
     .map(
@@ -100,19 +104,48 @@ function renderizarCards(lista) {
           <p class="nota">Nota: ${estrelas(filme.nota)}</p>
           <span class="badge ${filme.status}">${rotuloStatus(filme.status)}</span>
           <div class="acoes">
-            <button type="button">Editar</button>
-            <button type="button">Remover</button>
+            <button type="button" class="btn-editar">Editar</button>
+            <button type="button" class="btn-remover">Remover</button>
           </div>
         </article>
       `,
     )
     .join("");
 
-  const listaFilmes = document.querySelector("#lista");
   listaFilmes.innerHTML = cards;
 }
 
-renderizarCards(filmesIniciais);
+renderizarCards(filmes);
+
+listaFilmes.addEventListener("click", (evento) => {
+  const botaoRemover = evento.target.closest(".btn-remover");
+  if (!botaoRemover) return;
+  if (!confirm("Remover este filme?")) return;
+
+  const card = botaoRemover.closest(".card");
+  const id = Number(card.dataset.id);
+
+  filmes = filmes.filter((filme) => filme.id !== id);
+  renderizarCards(filmes);
+});
+
+navFiltros.addEventListener("click", (evento) => {
+  const botaoFiltro = evento.target.closest("button[data-status]");
+  if (!botaoFiltro) return;
+
+  navFiltros
+    .querySelectorAll("button")
+    .forEach((botao) => botao.classList.remove("ativo"));
+  botaoFiltro.classList.add("ativo");
+
+  const status = botaoFiltro.dataset.status;
+  const filmesFiltrados =
+    status === "todos"
+      ? filmes
+      : filmes.filter((filme) => filme.status === status);
+
+  renderizarCards(filmesFiltrados);
+});
 
 const TOTAL = filmesIniciais.length;
 const resumoRodape = document.querySelector("footer small");
