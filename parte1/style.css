@@ -398,18 +398,35 @@ input:valid {
 
 /* 9. Rodapé */
 footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 24px;
+  border-top: 1px solid var(--cor-borda);
   padding: 24px;
   text-align: center;
   color: var(--cor-texto-secundario);
 }
 
+footer .resumo-catalogo {
+  display: block;
+  margin-top: 8px;
+}
+
 footer a {
-  color: var(--cor-acento);                                           
-  text-decoration: none;
+  color: var(--cor-texto);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 footer a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+footer a:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 3px;
 }
 
 /* 10. Media Query para Telas Maiores (>= 1024px) */
