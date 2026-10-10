@@ -19,6 +19,7 @@ Cores Base:
   --cor-texto-inverso: #ffffff;
   --cor-foco: #4A90E2;
   --cor-sucesso: #2E7D32;
+  --cor-erro: #a93226;
   --cor-sombra: rgba(0, 0, 0, 0.1);
   --cor-sombra-modal: rgba(0, 0, 0, 0.3);
   --cor-overlay: rgba(0, 0, 0, 0.5);
@@ -52,6 +53,7 @@ Cores Base:
     --cor-input-fundo: #252525;
     --cor-foco: #8AB4F8;
     --cor-sucesso: #81C995;
+    --cor-erro: #ffb4ab;
     --cor-sombra: rgba(0, 0, 0, 0.3);
     --cor-sombra-modal: rgba(0, 0, 0, 0.55);
     --cor-overlay: rgba(0, 0, 0, 0.7);
@@ -301,6 +303,27 @@ form > div {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.erros-formulario {
+  padding: 12px;
+  border: 1px solid var(--cor-erro);
+  border-radius: var(--raio-sm);
+  color: var(--cor-erro);
+  overflow-wrap: anywhere;
+}
+
+.erros-formulario[hidden] {
+  display: none;
+}
+
+.erros-formulario ul {
+  padding-left: 16px;
+}
+
+.erros-formulario:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 3px;
 }
 
 form label {

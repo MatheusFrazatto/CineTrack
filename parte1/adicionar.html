@@ -17,6 +17,7 @@
     <!-- Formulário de cadastro -->
     <main class="pagina-adicionar">
         <form id="form-filme" action="#" method="POST">
+            <div id="erros-formulario" class="erros-formulario" role="alert" tabindex="-1" hidden></div>
             
             <!-- 1. Título -->
             <div>
@@ -46,7 +47,8 @@
             <div>
                 <label for="status"><strong>Status</strong></label>
                 <select id="status" name="status" required>
-                    <option value="quero_assistir">Quero assistir</option>
+                    <option value="" disabled hidden>Selecione o status</option>
+                    <option value="quero" selected>Quero assistir</option>
                     <option value="assistindo">Assistindo</option>
                     <option value="assistido">Assistido</option>
                 </select>
@@ -55,7 +57,7 @@
             <!-- 6. Nota -->
             <div>
                 <label for="nota"><strong>Nota (1 a 5)</strong></label>
-                <input type="number" id="nota" name="nota" min="1" max="5">
+                <input type="number" id="nota" name="nota" min="1" max="5" required>
             </div>
 
             <!-- 7. Comentário -->
@@ -66,12 +68,13 @@
 
             <!-- Ações -->
             <div class="form-acoes">
-                <button type="button" class="btn-cancelar" onclick="history.back()">Cancelar</button>
+                <button type="button" class="btn-cancelar">Cancelar</button>
                 <button type="submit" class="btn-salvar">Salvar</button>
             </div>
 
         </form>
     </main>
 
+    <script src="app.js"></script>
 </body>
 </html>

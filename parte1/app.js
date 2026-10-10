@@ -27,12 +27,35 @@ const estrelas = (nota) => {
 function validarFilme(filme) {
   const erros = [];
 
-  if (!filme.titulo) {
+  if (typeof filme.titulo !== "string" || !filme.titulo.trim()) {
     erros.push("Título obrigatório");
   }
 
-  if (filme.ano < 1888 || filme.ano > 2030) {
-    erros.push("Ano inválido");
+  if (!Number.isInteger(filme.ano) || filme.ano < 1888 || filme.ano > 2030) {
+    erros.push("Informe um ano inteiro entre 1888 e 2030.");
+  }
+
+  if (typeof filme.genero !== "string" || !filme.genero.trim()) {
+    erros.push("Gênero obrigatório");
+  }
+
+  if (!["assistido", "assistindo", "quero"].includes(filme.status)) {
+    erros.push("Selecione um status válido.");
+  }
+
+  if (!Number.isInteger(filme.nota) || filme.nota < 1 || filme.nota > 5) {
+    erros.push("Informe uma nota inteira de 1 a 5.");
+  }
+
+  if (filme.poster) {
+    try {
+      const url = new URL(filme.poster);
+      if (!["http:", "https:"].includes(url.protocol)) {
+        erros.push("A URL do pôster deve começar com http:// ou https://.");
+      }
+    } catch {
+      erros.push("Informe uma URL válida para o pôster ou deixe o campo vazio.");
+    }
   }
 
   return { valido: erros.length === 0, erros };
@@ -256,6 +279,8 @@ const form = document.querySelector("#form-filme");
 const botaoAdicionar = document.querySelector(".btn-adicionar");
 const botaoCancelar = document.querySelector(".btn-cancelar");
 const resumoRodape = document.querySelector(".resumo-catalogo");
+const errosFormulario = document.querySelector("#erros-formulario");
+const POSTER_PADRAO = "poster-placeholder.svg";
 let editandoId = null;
 
 const gerarId = (lista) =>
@@ -286,12 +311,42 @@ function debounce(fn, ms = 300) {
 }
 
 const abrir = () => {
+  mostrarErros([]);
   modal.hidden = false;
 };
 
 const fechar = () => {
-  modal.hidden = true;
+  if (modal) {
+    modal.hidden = true;
+  } else {
+    window.location.assign("index.html");
+  }
 };
+
+function lerDadosFormulario() {
+  const dados = Object.fromEntries(new FormData(form));
+  for (const campo of ["titulo", "genero", "poster", "comentario"]) {
+    dados[campo] = dados[campo].trim();
+  }
+  dados.ano = Number(dados.ano);
+  dados.nota = Number(dados.nota);
+  return dados;
+}
+
+function mostrarErros(erros) {
+  errosFormulario.replaceChildren();
+  const listaErros = document.createElement("ul");
+  erros.forEach((mensagem) => {
+    const item = document.createElement("li");
+    item.textContent = mensagem;
+    listaErros.appendChild(item);
+  });
+  errosFormulario.hidden = erros.length === 0;
+  if (erros.length > 0) {
+    errosFormulario.appendChild(listaErros);
+    errosFormulario.focus();
+  }
+}
 
 function criarCard(filme) {
   const card = document.createElement("article");
@@ -299,8 +354,13 @@ function criarCard(filme) {
   card.dataset.id = filme.id;
 
   const poster = document.createElement("img");
-  poster.src = filme.poster;
+  poster.src = filme.poster || POSTER_PADRAO;
   poster.alt = `Pôster de ${filme.titulo}`;
+  poster.addEventListener("error", () => {
+    if (poster.getAttribute("src") !== POSTER_PADRAO) {
+      poster.src = POSTER_PADRAO;
+    }
+  });
 
   const titulo = document.createElement("h2");
   titulo.textContent = filme.titulo;
@@ -348,6 +408,8 @@ function renderizarCards(lista) {
 }
 
 function atualizar() {
+  if (!listaFilmes) return;
+
   const filmesVisiveis = aplicarFiltros(filmes, {
     termo: termoAtual,
     status: statusAtual,
@@ -359,7 +421,7 @@ function atualizar() {
 
 atualizar();
 
-listaFilmes.addEventListener("click", (evento) => {
+listaFilmes?.addEventListener("click", (evento) => {
   const botaoEditar = evento.target.closest(".btn-editar");
 
   if (botaoEditar) {
@@ -390,7 +452,7 @@ listaFilmes.addEventListener("click", (evento) => {
   atualizar();
 });
 
-navFiltros.addEventListener("click", (evento) => {
+navFiltros?.addEventListener("click", (evento) => {
   const botaoFiltro = evento.target.closest("button[data-status]");
   if (!botaoFiltro) return;
 
@@ -408,9 +470,9 @@ const aoDigitar = (evento) => {
   atualizar();
 };
 
-busca.addEventListener("input", debounce(aoDigitar, 300));
+busca?.addEventListener("input", debounce(aoDigitar, 300));
 
-botaoAdicionar.addEventListener("click", () => {
+botaoAdicionar?.addEventListener("click", () => {
   editandoId = null;
   form.reset();
   abrir();
@@ -419,23 +481,31 @@ botaoAdicionar.addEventListener("click", () => {
 botaoCancelar.addEventListener("click", fechar);
 
 document.addEventListener("keydown", (evento) => {
-  if (evento.key === "Escape" && !modal.hidden) {
+  if (evento.key === "Escape" && modal && !modal.hidden) {
     fechar();
   }
 });
 
+form.addEventListener("invalid", (evento) => {
+  evento.preventDefault();
+  const { erros } = validarFilme(lerDadosFormulario());
+  mostrarErros(erros);
+}, true);
+
+form.addEventListener("input", () => mostrarErros([]));
+
 form.addEventListener("submit", (evento) => {
   evento.preventDefault();
 
-  const dados = Object.fromEntries(new FormData(form));
-  dados.ano = Number(dados.ano);
-  dados.nota = Number(dados.nota);
+  const dados = lerDadosFormulario();
 
   const { valido, erros } = validarFilme(dados);
   if (!valido) {
-    alert(erros.join("\n"));
+    mostrarErros(erros);
     return;
   }
+
+  mostrarErros([]);
 
   if (editandoId !== null) {
     filmes = filmes.map((filme) =>
