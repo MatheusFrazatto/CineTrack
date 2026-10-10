@@ -24,6 +24,20 @@ const estrelas = (nota) => {
   return resultado;
 };
 
+function validarFilme(filme) {
+  const erros = [];
+
+  if (!filme.titulo) {
+    erros.push("Título obrigatório");
+  }
+
+  if (filme.ano < 1888 || filme.ano > 2030) {
+    erros.push("Ano inválido");
+  }
+
+  return { valido: erros.length === 0, erros };
+}
+
 console.log(rotuloStatus("quero"), estrelas(3));
 
 const filmesIniciais = [
@@ -92,32 +106,96 @@ const filmesIniciais = [
 let filmes = [...filmesIniciais];
 const listaFilmes = document.querySelector("#lista");
 const navFiltros = document.querySelector("nav");
+const modal = document.querySelector("#modal");
+const form = document.querySelector("#form-filme");
+const botaoAdicionar = document.querySelector(".btn-adicionar");
+const botaoCancelar = document.querySelector(".btn-cancelar");
+let editandoId = null;
+
+const gerarId = (lista) =>
+  Math.max(0, ...lista.map((filme) => filme.id)) + 1;
+
+const abrir = () => {
+  modal.hidden = false;
+};
+
+const fechar = () => {
+  modal.hidden = true;
+};
+
+function criarCard(filme) {
+  const card = document.createElement("article");
+  card.className = "card";
+  card.dataset.id = filme.id;
+
+  const poster = document.createElement("img");
+  poster.src = filme.poster;
+  poster.alt = `Pôster de ${filme.titulo}`;
+
+  const titulo = document.createElement("h2");
+  titulo.textContent = filme.titulo;
+
+  const detalhes = document.createElement("p");
+  detalhes.textContent = `${filme.ano} · ${filme.genero}`;
+
+  const nota = document.createElement("p");
+  nota.className = "nota";
+  nota.textContent = `Nota: ${estrelas(filme.nota)}`;
+
+  const badge = document.createElement("span");
+  badge.className = `badge ${filme.status}`;
+  badge.textContent = rotuloStatus(filme.status);
+
+  const acoes = document.createElement("div");
+  acoes.className = "acoes";
+
+  const editar = document.createElement("button");
+  editar.type = "button";
+  editar.className = "btn-editar";
+  editar.textContent = "Editar";
+
+  const remover = document.createElement("button");
+  remover.type = "button";
+  remover.className = "btn-remover";
+  remover.textContent = "Remover";
+
+  acoes.append(editar, remover);
+  card.append(poster, titulo, detalhes, nota, badge, acoes);
+
+  return card;
+}
 
 function renderizarCards(lista) {
-  const cards = lista
-    .map(
-      (filme) => `
-        <article class="card" data-id="${filme.id}">
-          <img src="${filme.poster}" alt="Pôster de ${filme.titulo}">
-          <h2>${filme.titulo}</h2>
-          <p>${filme.ano} &middot; ${filme.genero}</p>
-          <p class="nota">Nota: ${estrelas(filme.nota)}</p>
-          <span class="badge ${filme.status}">${rotuloStatus(filme.status)}</span>
-          <div class="acoes">
-            <button type="button" class="btn-editar">Editar</button>
-            <button type="button" class="btn-remover">Remover</button>
-          </div>
-        </article>
-      `,
-    )
-    .join("");
+  const fragmento = document.createDocumentFragment();
 
-  listaFilmes.innerHTML = cards;
+  lista.forEach((filme) => {
+    fragmento.appendChild(criarCard(filme));
+  });
+
+  listaFilmes.replaceChildren(fragmento);
 }
 
 renderizarCards(filmes);
 
 listaFilmes.addEventListener("click", (evento) => {
+  const botaoEditar = evento.target.closest(".btn-editar");
+
+  if (botaoEditar) {
+    const card = botaoEditar.closest(".card");
+    editandoId = Number(card.dataset.id);
+    const filme = filmes.find((item) => item.id === editandoId);
+
+    form.elements.titulo.value = filme.titulo;
+    form.elements.ano.value = filme.ano;
+    form.elements.genero.value = filme.genero;
+    form.elements.poster.value = filme.poster;
+    form.elements.status.value = filme.status;
+    form.elements.nota.value = filme.nota;
+    form.elements.comentario.value = filme.comentario;
+    abrir();
+    return;
+  }
+
   const botaoRemover = evento.target.closest(".btn-remover");
   if (!botaoRemover) return;
   if (!confirm("Remover este filme?")) return;
@@ -145,6 +223,45 @@ navFiltros.addEventListener("click", (evento) => {
       : filmes.filter((filme) => filme.status === status);
 
   renderizarCards(filmesFiltrados);
+});
+
+botaoAdicionar.addEventListener("click", () => {
+  editandoId = null;
+  form.reset();
+  abrir();
+});
+
+botaoCancelar.addEventListener("click", fechar);
+
+document.addEventListener("keydown", (evento) => {
+  if (evento.key === "Escape" && !modal.hidden) {
+    fechar();
+  }
+});
+
+form.addEventListener("submit", (evento) => {
+  evento.preventDefault();
+
+  const dados = Object.fromEntries(new FormData(form));
+  dados.ano = Number(dados.ano);
+  dados.nota = Number(dados.nota);
+
+  const { valido, erros } = validarFilme(dados);
+  if (!valido) {
+    alert(erros.join("\n"));
+    return;
+  }
+
+  if (editandoId !== null) {
+    filmes = filmes.map((filme) =>
+      filme.id === editandoId ? { ...filme, ...dados } : filme,
+    );
+  } else {
+    filmes = [...filmes, { id: gerarId(filmes), ...dados }];
+  }
+
+  renderizarCards(filmes);
+  fechar();
 });
 
 const TOTAL = filmesIniciais.length;
