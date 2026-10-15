@@ -292,14 +292,20 @@ nav button.ativo {
   margin: 0 auto;
 }
 
-form {
+#form-filme {
+  width: 100%;
+  max-width: 480px;
+  margin: var(--espaco) auto 0;
+  padding: 24px;
+  border-radius: var(--raio-lg);
+  background: var(--cor-card);
+  box-shadow: 0 2px 8px var(--cor-sombra);
   display: flex;
   flex-direction: column;
   gap: var(--espaco);
-  margin-top: var(--espaco);
 }
 
-form > div {
+.campo {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -327,6 +333,7 @@ form > div {
 }
 
 form label {
+  font-weight: 700;
   font-size: 0.95rem;
   color: var(--cor-texto);
 }
@@ -366,17 +373,31 @@ input:valid {
 
 .form-acoes {
   display: flex;
-  flex-direction: row !important;
+  flex-direction: row;
+  justify-content: flex-end;
   gap: 12px;
   margin-top: 8px;
 }
 
 .btn-cancelar {
-  flex: 1;
   padding: 8px var(--espaco);
   border: 1px solid var(--cor-borda);
   background: var(--cor-card);
   color: var(--cor-texto);
+}
+
+/* O modal já é a caixa do formulário; evita uma segunda camada de card. */
+.modal-conteudo #form-filme {
+  padding: 0;
+  box-shadow: none;
+}
+
+.form-acoes .btn-salvar {
+  background: var(--cor-primaria);
+}
+
+.form-acoes .btn-salvar:hover {
+  background: var(--cor-acento-hover);
 }
 
 /* 8. Estrutura e Animação do Modal */
