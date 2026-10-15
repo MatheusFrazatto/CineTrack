@@ -199,6 +199,29 @@ nav button.ativo {
   color: var(--cor-texto-inverso);
 }
 
+.ordenacao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.ordenacao select {
+  min-width: 0;
+  max-width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  background: var(--cor-input-fundo);
+  color: var(--cor-texto);
+  font: inherit;
+}
+
+.ordenacao select:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 2px;
+}
+
 /* 6. Grade de Cards (Grid Responsivo) */
 #lista {
   display: grid;

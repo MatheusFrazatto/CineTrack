@@ -271,8 +271,10 @@ function carregar() {
 let filmes = carregar();
 let termoAtual = "";
 let statusAtual = "todos";
+let ordemAtual = "titulo";
 const listaFilmes = document.querySelector("#lista");
 const navFiltros = document.querySelector("nav");
+const selecaoOrdem = document.querySelector("#ordenar");
 const busca = document.querySelector("header input");
 const modal = document.querySelector("#modal");
 const form = document.querySelector("#form-filme");
@@ -299,6 +301,14 @@ function aplicarFiltros(lista, opcoes) {
       (filme) =>
         opcoes.status === "todos" || filme.status === opcoes.status,
     );
+}
+
+function ordenarFilmes(lista, criterio) {
+  return [...lista].sort((primeiro, segundo) => {
+    if (criterio === "ano") return segundo.ano - primeiro.ano;
+    if (criterio === "nota") return segundo.nota - primeiro.nota;
+    return primeiro.titulo.localeCompare(segundo.titulo, "pt-BR");
+  });
 }
 
 function debounce(fn, ms = 300) {
@@ -415,7 +425,7 @@ function atualizar() {
     status: statusAtual,
   });
 
-  renderizarCards(filmesVisiveis);
+  renderizarCards(ordenarFilmes(filmesVisiveis, ordemAtual));
   resumoRodape.textContent = `CineTrack © 2026 · ${filmes.length} filmes cadastrados`;
 }
 
@@ -462,6 +472,11 @@ navFiltros?.addEventListener("click", (evento) => {
   botaoFiltro.classList.add("ativo");
 
   statusAtual = botaoFiltro.dataset.status;
+  atualizar();
+});
+
+selecaoOrdem?.addEventListener("change", (evento) => {
+  ordemAtual = evento.target.value;
   atualizar();
 });
 
