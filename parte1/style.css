@@ -574,3 +574,50 @@ footer a:focus-visible {
 .pagina-sobre details ul {
   padding-left: 24px;
 }
+
+/* ANP 04: catálogo para papel, inclusive quando o sistema usa tema escuro. */
+@media print {
+  :root {
+    color-scheme: light;
+    --cor-fundo: #ffffff;
+    --cor-card: #ffffff;
+    --cor-texto: #000000;
+    --cor-texto-secundario: #000000;
+    --cor-primaria: #ffffff;
+    --cor-texto-inverso: #000000;
+    --cor-borda: #777777;
+    --cor-input-fundo: #ffffff;
+    --cor-acento: #000000;
+    --cor-erro: #000000;
+    --cor-sombra: transparent;
+    --badge-assistido-bg: #ffffff;
+    --badge-assistido-texto: #000000;
+    --badge-assistindo-bg: #ffffff;
+    --badge-assistindo-texto: #000000;
+    --badge-quero-bg: #ffffff;
+    --badge-quero-texto: #000000;
+  }
+
+  header input,
+  header .btn-adicionar,
+  nav,
+  .card .acoes,
+  footer,
+  #modal {
+    display: none !important;
+  }
+
+  #lista {
+    display: block;
+    columns: 2;
+    column-gap: 16px;
+    padding: 16px;
+  }
+
+  .card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 16px;
+    box-shadow: none;
+  }
+}
