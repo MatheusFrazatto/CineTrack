@@ -467,3 +467,89 @@ footer a:focus-visible {
     padding: 24px 32px;
   }
 }
+
+/* Página Sobre: conteúdo sem JavaScript, com o mesmo tema do catálogo. */
+.pagina-sobre {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+  overflow-wrap: anywhere;
+}
+
+.pagina-sobre section,
+.pagina-sobre details {
+  margin-top: 32px;
+}
+
+.pagina-sobre h2 {
+  margin-bottom: 12px;
+  font-size: 1.35rem;
+}
+
+.tabela-responsiva {
+  overflow-x: auto;
+}
+
+.tabela-responsiva:focus-visible,
+.pagina-sobre summary:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 3px;
+}
+
+.pagina-sobre table {
+  width: 100%;
+  min-width: 600px;
+  overflow-wrap: normal;
+  border-collapse: collapse;
+  background: var(--cor-card);
+}
+
+.pagina-sobre caption {
+  padding-bottom: 12px;
+  text-align: left;
+  color: var(--cor-texto-secundario);
+}
+
+.pagina-sobre th,
+.pagina-sobre td {
+  border: 1px solid var(--cor-borda);
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.pagina-sobre th {
+  background: var(--cor-primaria);
+  color: var(--cor-texto-inverso);
+}
+
+.pagina-sobre figure img {
+  height: auto;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+}
+
+.pagina-sobre figcaption {
+  max-width: 65ch;
+  margin-top: 8px;
+  color: var(--cor-texto-secundario);
+}
+
+.pagina-sobre details {
+  padding: 16px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-card);
+}
+
+.pagina-sobre summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.pagina-sobre details p {
+  margin: 12px 0 8px;
+}
+
+.pagina-sobre details ul {
+  padding-left: 24px;
+}

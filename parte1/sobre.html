@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre - CineTrack</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="link-voltar">&larr; Voltar</a>
+        <h1>Sobre o CineTrack</h1>
+    </header>
+
+    <main class="pagina-sobre">
+        <p>O CineTrack é um catálogo pessoal de filmes desenvolvido na disciplina de
+            Programação de Sistemas Web da Universidade Estadual de Maringá.
+            Nele, é possível acompanhar o que já foi assistido, o que está em andamento
+            e o que ainda se deseja assistir.</p>
+
+        <section aria-labelledby="titulo-colecao">
+            <h2 id="titulo-colecao">Coleção inicial da disciplina</h2>
+            <div class="tabela-responsiva" role="region" aria-label="Tabela da coleção inicial" tabindex="0">
+                <table>
+                    <caption>Os seis filmes canônicos e seus status iniciais</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Título</th>
+                            <th scope="col">Ano</th>
+                            <th scope="col">Gênero</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>A Origem</td><td>2010</td><td>Ficção científica</td><td>Assistido</td></tr>
+                        <tr><td>Parasita</td><td>2019</td><td>Suspense</td><td>Assistido</td></tr>
+                        <tr><td>O Auto da Compadecida</td><td>2000</td><td>Comédia</td><td>Assistido</td></tr>
+                        <tr><td>Duna: Parte Dois</td><td>2024</td><td>Ficção científica</td><td>Assistindo</td></tr>
+                        <tr><td>Interestelar</td><td>2014</td><td>Ficção científica</td><td>Quero assistir</td></tr>
+                        <tr><td>Cidade de Deus</td><td>2002</td><td>Drama</td><td>Quero assistir</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section aria-labelledby="titulo-rascunho">
+            <h2 id="titulo-rascunho">Planejamento da interface</h2>
+            <figure>
+                <img src="../docs/rascunho-tela.jpg" width="643" height="362"
+                    alt="Rascunho da tela principal do CineTrack, com busca, filtros de status e cards de filmes.">
+                <figcaption>Rascunho inicial da tela: cabeçalho com busca e ação de adicionar,
+                    filtros de status e uma grade com os filmes da coleção.</figcaption>
+            </figure>
+        </section>
+
+        <details>
+            <summary>Como os dados são organizados</summary>
+            <p>Cada filme possui sete campos, conforme os requisitos do projeto:</p>
+            <ul>
+                <li><strong>Título:</strong> nome do filme.</li>
+                <li><strong>Ano:</strong> ano de lançamento.</li>
+                <li><strong>Gênero:</strong> categoria cinematográfica.</li>
+                <li><strong>Pôster:</strong> URL da imagem da capa.</li>
+                <li><strong>Status:</strong> Assistido, Assistindo ou Quero assistir.</li>
+                <li><strong>Nota:</strong> avaliação de 1 a 5 estrelas.</li>
+                <li><strong>Comentário:</strong> análise ou observações pessoais.</li>
+            </ul>
+        </details>
+    </main>
+
+    <footer>
+        <p><a href="sobre.html">Sobre o CineTrack</a></p>
+        <p>Desenvolvido por <a href="https://github.com/MatheusFrazatto">Matheus Frazatto</a></p>
+        <p>Programação de Sistemas Web · UEM</p>
+        <p>Professor: Lucas de Oliveira Teixeira</p>
+        <p><small class="resumo-catalogo">CineTrack © 2026</small></p>
+    </footer>
+</body>
+</html>
