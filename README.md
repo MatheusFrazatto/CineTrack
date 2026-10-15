@@ -1,6 +1,6 @@
 # CineTrack
 
-O CineTrack é um sistema web desenvolvido como projeto integrador da disciplina de Programação de Sistemas Web na Universidade Estadual de Maringá (UEM). A aplicação funciona como um catálogo pessoal para acompanhar filmes assistidos, em andamento ou que o usuário ainda deseja assistir.
+O CineTrack é um catálogo pessoal de filmes desenvolvido como projeto integrador da disciplina de Programação de Sistemas Web da Universidade Estadual de Maringá (UEM). Permite acompanhar filmes assistidos, em andamento ou que o usuário deseja assistir.
 
 ## Autoria
 
@@ -9,46 +9,85 @@ O CineTrack é um sistema web desenvolvido como projeto integrador da disciplina
 - Disciplina: Programação de Sistemas Web - UEM.
 - Professor: Lucas de Oliveira Teixeira.
 
-## Funcionalidades da versão 1.0
-
-- Listagem de filmes em cards responsivos.
-- Cadastro, edição e remoção sem recarregar a página.
-- Filtros por status combinados com busca por título.
-- Busca em tempo real com `debounce` de 300 ms.
-- Validação dos dados do formulário.
-- Nota obrigatória de 1 a 5 no cadastro e na edição; erros exibidos no formulário, sem `alert()`.
-- Pôster substituto local quando a URL não é informada ou a imagem não carrega.
-- Persistência no `localStorage` com a chave `cinetrack:filmes`.
-- Tema claro ou escuro conforme a preferência do sistema.
-
 ## Como executar
 
-Recomenda-se servir a pasta `parte1` com a extensão Live Server e acessar `index.html` em um navegador moderno. Use sempre o mesmo endereço e porta para preservar o acesso aos dados do `localStorage`.
+Abra **a raiz do repositório** no VS Code e use o Live Server. Acesse `parte1/index.html` para o catálogo e `exercicios/anp05/index.html` para o exercício de módulos ES6. Servir a raiz também permite que a página Sobre carregue a imagem de `docs/rascunho-tela.jpg`.
 
-O botão **+ Adicionar** abre o formulário em modal. A página `adicionar.html` também permite cadastrar: ela salva no mesmo catálogo e retorna à página principal, sem enviar um `POST` ao servidor. As duas páginas devem ser abertas na mesma origem (como a mesma instância do Live Server).
+Outra opção, com Python instalado, é executar na raiz:
 
-Os 16 filmes ficam reunidos na constante `catalogoFilmes`: seis exemplos da disciplina e dez títulos adicionados à coleção pessoal. Os novos títulos também são importados uma única vez em navegadores que já possuem um catálogo salvo, preservando os cadastros e as avaliações existentes. Depois de adicionar, editar ou remover um filme, a lista fica armazenada no navegador e é restaurada nos próximos acessos. Filmes importados que forem removidos não reaparecem ao recarregar.
+```sh
+python3 -m http.server 8000
+```
 
-Para voltar ao catálogo inicial completo, remova as chaves `cinetrack:filmes` e `cinetrack:importacao-filmes-2026-10` na seção **Application > Local Storage** das ferramentas de desenvolvimento do navegador e recarregue a página.
+Depois, abra [o catálogo](http://localhost:8000/parte1/index.html) ou [o exercício ES6](http://localhost:8000/exercicios/anp05/index.html). Os módulos exigem HTTP; não abra o exercício com `file://`.
 
-Os dez filmes adicionais usam títulos em português, dados públicos de cinema e pôsteres disponibilizados pelo MetaHub. Não há consulta a uma API durante a execução do aplicativo. Esses títulos já incluem notas iniciais de 1 a 5, que podem ser alteradas pelo usuário; os comentários começam em branco. Os dados existentes são preservados, mas ao cadastrar ou editar um filme é obrigatório informar uma nota de 1 a 5.
+Use sempre o mesmo endereço e porta: o `localStorage` pertence à origem da página. O botão **+ Adicionar** abre o modal; `parte1/adicionar.html` também cadastra no mesmo catálogo e volta à página principal. O cadastro é tratado pelo JavaScript, sem enviar um `POST` ao servidor.
 
-## Estrutura principal
+## Funcionalidades
 
-- `parte1/index.html`: página principal, filtros e formulário em modal.
-- `parte1/style.css`: estilos responsivos, temas e estados visuais.
-- `parte1/app.js`: dados, renderização, eventos, busca e persistência.
-- `parte1/adicionar.html`: formulário alternativo, com cadastro persistente pelo mesmo `app.js`.
-- `parte1/poster-placeholder.svg`: imagem local usada quando um filme não possui pôster disponível.
+- Cards responsivos com pôster, título, ano, gênero, nota e status.
+- Cadastro, edição e remoção sem recarregar a página; remoção com confirmação.
+- Busca por título com `debounce` de 300 ms, combinada com filtro de status.
+- Ordenação por título (A a Z, respeitando acentos em português), ano mais recente ou maior nota. A ordenação preserva o array original e continua ativa ao buscar ou trocar o filtro.
+- Validação de título, gênero e status, ano inteiro entre 1888 e 2030 e nota inteira de 1 a 5. Os erros aparecem no formulário.
+- Pôster substituto local quando a URL não é informada ou a imagem falha.
+- Persistência do catálogo no `localStorage`.
+- Tema claro/escuro conforme o sistema e estilo de impressão em papel branco, sem controles ou rodapé.
+- Página Sobre com os seis filmes canônicos da disciplina, rascunho da interface e descrição dos sete campos.
+
+## Catálogo inicial e persistência
+
+A primeira visita carrega **16 filmes**: seis canônicos da disciplina e dez da coleção pessoal. **Por decisão do autor, os 16 foram mantidos na ANP 06**, embora o roteiro original peça apenas seis na primeira visita. Essa divergência está registrada em [testes-parte1.md](docs/testes-parte1.md).
+
+A constante `catalogoFilmes` reúne os dados iniciais. Os dez títulos adicionais também são importados uma única vez para navegadores com um catálogo antigo, preservando cadastros e avaliações. Filmes adicionais removidos não voltam depois que essa importação foi marcada como concluída.
+
+O catálogo usa `cinetrack:filmes`, e a importação usa `cinetrack:importacao-filmes-2026-10`. Para restaurar os **16 filmes iniciais**, remova essas duas chaves em **DevTools > Application > Local Storage** e recarregue. Isso apaga os cadastros e avaliações locais dessa origem; faça esse teste em um perfil descartável para preservar sua coleção.
+
+Os dez títulos adicionais usam dados públicos e pôsteres do MetaHub; não há consulta a uma API durante a execução. As notas iniciais podem ser editadas. A API REST de filmes está planejada para a Parte 2 em [requisitos.md](docs/requisitos.md).
+
+## Entregas das ANPs
+
+| ANP | Entrega |
+| --- | --- |
+| 01 | [Análise HTTP](docs/analise-http.md) e [captura HAR](docs/evidencias/anp01/requisicoes.har). A coleta real foi automatizada via Chrome DevTools Protocol; o relatório explica essa diferença em relação ao procedimento manual no DevTools. |
+| 02 | [Página Sobre](parte1/sobre.html), com tabela, figure, details e navegação. |
+| 03 | Formulário como card de até 480 px, campos em coluna e ações à direita. |
+| 04 | Bloco `@media print` no CSS compartilhado, com cores por variáveis e cards sem corte. |
+| 05 | [Exercício isolado de módulos ES6](exercicios/anp05/index.html): média 4,5, contagem 3/1/2 e ordenação sem mutação. |
+| 06 | Ordenação combinada com busca/status e [roteiro com resultados reais](docs/testes-parte1.md), incluindo a divergência autorizada de 16 filmes. |
+
+## Estrutura
+
+```text
+parte1/
+  index.html              Catálogo, filtros, ordenação e modal
+  adicionar.html          Formulário alternativo de cadastro
+  sobre.html              Conteúdo sobre o projeto e dados canônicos
+  style.css               Estilos compartilhados e impressão
+  app.js                  Dados, DOM, eventos, validação e persistência
+  poster-placeholder.svg  Pôster local de substituição
+exercicios/anp05/
+  index.html              Página do exercício
+  filmes.js               Seis filmes canônicos exportados
+  estatisticas.js         Funções puras exportadas
+  main.js                 Imports e quatro resultados no console
+  estatisticas.test.mjs    Testes das funções e dos dados canônicos
+```
+
+A Parte 1 mantém um `app.js` único, sem `type="module"`, como nos slides. Os módulos ES6 da ANP 05 ficam separados, sem usar ou alterar o armazenamento do aplicativo.
+
+## Verificação
+
+Os testes das estatísticas podem ser executados com Node.js 22:
+
+```sh
+node exercicios/anp05/estatisticas.test.mjs
+```
+
+O roteiro do aplicativo, os resultados e as limitações estão em [docs/testes-parte1.md](docs/testes-parte1.md). As verificações das ANPs 01 a 05 estão em [docs/verificacoes-anps.md](docs/verificacoes-anps.md).
+
+A interface usa HTML semântico, rótulos nos campos, textos alternativos, foco visível e navegação por teclado. Os HTMLs foram enviados ao validador oficial W3C com autorização do autor. Os resultados Lighthouse anteriores às ANPs são históricos; o Lighthouse não foi reexecutado nesta entrega.
 
 ## Tecnologias
 
-HTML5, CSS3 e JavaScript puro, sem bibliotecas externas.
-
-## Acessibilidade
-
-A interface utiliza HTML semântico, rótulos associados aos campos, textos alternativos nos pôsteres, navegação por teclado e indicação visual de foco. Na revisão da versão 1.0, a página principal alcançou **95/100** na categoria de acessibilidade do Lighthouse.
-
-Na revisão das correções finais, as páginas `index.html` e `adicionar.html` alcançaram **100/100** em acessibilidade no Lighthouse, nos perfis de 320 e 1920 px. Os dois arquivos também passaram no validador local `html-validate` com o conjunto de regras `standard`, sem erros ou avisos. Esses resultados não substituem a revisão manual de acessibilidade.
-
-Os dois HTMLs foram conferidos no validador W3C Nu, sem erros. Em `index.html`, permanece apenas o aviso de que a seção `#lista` não possui título no HTML inicial: ela começa vazia conforme os slides e recebe os cards com seus títulos via JavaScript.
+HTML5, CSS3 e JavaScript puro, sem bibliotecas externas na aplicação. O exercício usa o executor de testes nativo do Node.js apenas para verificação.
