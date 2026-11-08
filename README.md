@@ -55,6 +55,7 @@ Arquivos `.env` são ignorados pelo Git. Variáveis `VITE_*` são públicas: nun
 
 - Catálogo responsivo com os seis filmes originais da disciplina.
 - Busca por título com debounce de 300 ms, combinada com filtros por status.
+- Ordenação por título em português, ano mais recente ou maior nota, preservada ao buscar, filtrar e alterar o catálogo.
 - Cadastro e edição com os sete campos: título, ano, gênero, pôster, status, nota e comentário.
 - Remoção com confirmação; atualização de estado sem mutação.
 - Validação no formulário e no servidor: título e gênero obrigatórios, ano inteiro entre 1888 e 2030, status válido, nota inteira de 1 a 5 e URL de pôster HTTP/HTTPS ou vazia.
@@ -63,6 +64,8 @@ Arquivos `.env` são ignorados pelo Git. Variáveis `VITE_*` são públicas: nun
 - A interface aguarda o servidor para concluir as escritas. Erros preservam a lista e os dados do formulário para nova tentativa.
 - Modal nativo com labels, foco inicial e fechamento por Escape; ações bloqueadas durante o salvamento.
 - Temas claro/escuro conforme o sistema e respeito à preferência de movimento reduzido.
+- Página Sobre com tabela dos seis filmes, rascunho e descrição dos campos; navegação pelo link no rodapé e opção de voltar ao catálogo.
+- Estilo de impressão herdado da Parte 1: papel branco, texto preto, cards sem corte e controles, rodapé e modal ocultos.
 
 ### API REST
 
@@ -142,7 +145,7 @@ A constante `catalogoFilmes` reúne os dados iniciais. Os dez títulos adicionai
 
 O catálogo usa `cinetrack:filmes`, e a importação usa `cinetrack:importacao-filmes-2026-10`. Para restaurar os **16 filmes iniciais**, remova essas duas chaves em **DevTools > Application > Local Storage** e recarregue. Isso apaga os cadastros e avaliações locais dessa origem; faça esse teste em um perfil descartável para preservar sua coleção.
 
-Os dez títulos adicionais usam dados públicos e pôsteres do MetaHub; não há consulta a uma API durante a execução. As notas iniciais podem ser editadas. A API REST de filmes está planejada para a Parte 2 em [requisitos.md](docs/requisitos.md).
+Os dez títulos adicionais usam dados públicos e pôsteres do MetaHub; não há consulta a uma API durante a execução da Parte 1. As notas iniciais podem ser editadas. A API REST está implementada na Parte 2, conforme as instruções acima; o mapeamento inicial está em [requisitos.md](docs/requisitos.md).
 
 ### Entregas das ANPs
 

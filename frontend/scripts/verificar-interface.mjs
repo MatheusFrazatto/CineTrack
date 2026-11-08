@@ -63,6 +63,15 @@ async function preencher(seletor, valor) {
   await act(async () => elemento.dispatchEvent(new dom.window.Event('input', { bubbles: true })))
 }
 const enviar = () => act(async () => document.querySelector('form').dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true })))
+const titulos = () => [...document.querySelectorAll('.card h2')].map((elemento) => elemento.textContent)
+async function ordenarPor(valor) {
+  const seletor = document.querySelector('#ordenar')
+  assert.ok(seletor, 'O seletor de ordenação deve existir')
+  await act(async () => {
+    seletor.value = valor
+    seletor.dispatchEvent(new dom.window.Event('change', { bubbles: true }))
+  })
+}
 try {
   const { default: App } = await server.ssrLoadModule('/src/App.jsx')
   await act(async () => root.render(createElement(App)))
@@ -76,6 +85,12 @@ try {
   await esperar(() => document.querySelectorAll('.card').length === 6)
   assert.equal(document.querySelectorAll('.card').length, 6)
   assert.equal(document.title, 'CineTrack (6)')
+  assert.deepEqual(titulos(), ['A Origem', 'Cidade de Deus', 'Duna: Parte Dois', 'Interestelar', 'O Auto da Compadecida', 'Parasita'])
+  await ordenarPor('ano')
+  assert.equal(titulos()[0], 'Duna: Parte Dois')
+  await ordenarPor('nota')
+  assert.equal(document.querySelector('#ordenar').value, 'nota')
+  assert.ok(titulos().indexOf('Interestelar') < titulos().indexOf('Cidade de Deus'))
   await click('[aria-label="Adicionar filme"]')
   await enviar()
   assert.match(document.querySelector('[role="alert"]').textContent, /Título obrigatório/)
@@ -92,6 +107,8 @@ try {
   await esperar(() => document.querySelectorAll('.card').length === 7)
   assert.equal(document.querySelectorAll('.card').length, 7)
   assert.equal(document.querySelector('dialog'), null)
+  assert.equal(document.querySelector('#ordenar').value, 'nota')
+  assert.equal(titulos().at(-1), 'Filme de teste')
   await click('[aria-label="Editar Filme de teste"]')
   await preencher('#titulo', 'Filme editado')
   modo = 'escrita-erro'
@@ -122,6 +139,20 @@ try {
   assert.equal(document.querySelectorAll('.card').length, 1)
   await click('nav button:nth-child(2)')
   assert.match(document.querySelector('main').textContent, /Nenhum filme encontrado/)
+  assert.equal(document.querySelector('#ordenar').value, 'nota')
+  await click('a[href="#sobre"]')
+  await esperar(() => document.querySelector('.pagina-sobre'))
+  assert.equal(document.querySelectorAll('.pagina-sobre tbody tr').length, 6)
+  assert.equal(document.querySelectorAll('.pagina-sobre details li').length, 7)
+  assert.ok(document.querySelector('.pagina-sobre figure img').getAttribute('src'))
+  assert.equal(document.title, 'Sobre - CineTrack')
+  await click('.pagina-sobre summary')
+  assert.ok(document.querySelector('.pagina-sobre details').open)
+  await click('a[href="#catalogo"]')
+  await esperar(() => document.querySelector('#ordenar'))
+  assert.equal(document.querySelector('#ordenar').value, 'nota')
+  assert.equal(document.querySelector('input[type="search"]').value, 'INTER')
+  assert.equal(document.title, 'CineTrack (6)')
   await act(async () => root.unmount())
   fs.writeFileSync(arquivo, '[]')
   root = createRoot(document.querySelector('#root'))

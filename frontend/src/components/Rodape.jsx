@@ -1,6 +1,7 @@
 export default function Rodape({ total }) {
   return (
     <footer>
+      <p><a href="#sobre">Sobre o CineTrack</a></p>
       <p>Desenvolvido por <a href="https://github.com/MatheusFrazatto">Matheus Frazatto</a></p>
       <p>Programação de Sistemas Web · UEM</p>
       <p>Professor: Lucas de Oliveira Teixeira</p>

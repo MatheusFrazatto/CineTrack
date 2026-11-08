@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from 'react'
 import { filtrarFilmes } from './filtrarFilmes.js'
 import ModalFilme from './components/ModalFilme.jsx'
 import { listar, criar, atualizar, remover } from './api.js'
+import { ordenarFilmes } from './ordenarFilmes.js'
+import Sobre from './components/Sobre.jsx'
 
 export default function App() {
   const [filmes, setFilmes] = useState([])
@@ -19,6 +21,18 @@ export default function App() {
   const [status, setStatus] = useState('todos')
   const [busca, setBusca] = useState('')
   const [buscaAplicada, setBuscaAplicada] = useState('')
+  const [ordem, setOrdem] = useState('titulo')
+  const [pagina, setPagina] = useState('catalogo')
+
+  useEffect(() => {
+    function navegar() {
+      setPagina(window.location.hash === '#sobre' ? 'sobre' : 'catalogo')
+      setEditando(null)
+    }
+    navegar()
+    window.addEventListener('hashchange', navegar)
+    return () => window.removeEventListener('hashchange', navegar)
+  }, [])
 
   useEffect(() => {
     let ativo = true
@@ -31,14 +45,16 @@ export default function App() {
     return () => { ativo = false }
   }, [tentativa])
 
-  useEffect(() => { document.title = `CineTrack (${filmes.length})` }, [filmes.length])
+  useEffect(() => {
+    document.title = pagina === 'sobre' ? 'Sobre - CineTrack' : `CineTrack (${filmes.length})`
+  }, [filmes.length, pagina])
 
   useEffect(() => {
     const timer = setTimeout(() => setBuscaAplicada(busca), 300)
     return () => clearTimeout(timer)
   }, [busca])
 
-  const visiveis = filtrarFilmes(filmes, status, buscaAplicada)
+  const visiveis = ordenarFilmes(filtrarFilmes(filmes, status, buscaAplicada), ordem)
 
   async function salvar(dados) {
     if (operacao.current) return
@@ -76,10 +92,12 @@ export default function App() {
       setOcupado(false)
     }
   }
+  if (pagina === 'sobre') return <><Sobre /><Rodape total={filmes.length} /></>
+
   return (
     <>
       <Header busca={busca} aoBuscar={setBusca} aoAdicionar={() => setEditando({})} ocupado={carregando || Boolean(erro) || ocupado} />
-      <Filtros ativo={status} aoMudar={setStatus} />
+      <Filtros ativo={status} aoMudar={setStatus} ordem={ordem} aoOrdenar={setOrdem} />
       <main aria-busy={carregando}>
         {erroAcao && <p className="mensagem erros-formulario" role="alert">{erroAcao}</p>}
         {carregando ? <p className="mensagem" role="status">Carregando filmes...</p> : erro ? (

@@ -17,7 +17,7 @@ function selecionarCampos(dados) {
 }
 
 function normalizar(filme) {
-  return { ...filme, titulo: filme.titulo.trim(), genero: filme.genero.trim(), poster: filme.poster.trim() }
+  return { ...filme, titulo: filme.titulo.trim(), genero: filme.genero.trim(), poster: filme.poster.trim(), comentario: filme.comentario.trim() }
 }
 
 function criarApp({ arquivo = ARQUIVO, log = true } = {}) {

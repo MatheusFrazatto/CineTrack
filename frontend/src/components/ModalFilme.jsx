@@ -29,7 +29,7 @@ export default function ModalFilme({ filme, aoSalvar, aoFechar }) {
     evento.preventDefault()
     if (enviando.current) return
     const filmeSalvo = { ...dados, titulo: dados.titulo.trim(), genero: dados.genero.trim(),
-      poster: dados.poster.trim(), ano: Number(dados.ano), nota: Number(dados.nota) }
+      poster: dados.poster.trim(), comentario: dados.comentario.trim(), ano: Number(dados.ano), nota: Number(dados.nota) }
     const validacao = validarFilme(filmeSalvo)
     if (!validacao.valido) { setErros(validacao.erros); return }
     enviando.current = true
@@ -49,7 +49,7 @@ export default function ModalFilme({ filme, aoSalvar, aoFechar }) {
     <dialog ref={dialogo} className="modal-conteudo" aria-labelledby="titulo-modal"
       onCancel={(evento) => { evento.preventDefault(); if (!enviando.current) aoFechar() }}>
       <h2 id="titulo-modal">{filme.id ? 'Editar filme' : 'Adicionar filme'}</h2>
-      <form onSubmit={submeter} noValidate aria-busy={salvando}>
+      <form id="form-filme" onSubmit={submeter} noValidate aria-busy={salvando}>
         {erros.length > 0 && <div className="erros-formulario" role="alert" tabIndex={-1} ref={errosRef}>
           <ul>{erros.map((erro) => <li key={erro}>{erro}</li>)}</ul>
         </div>}
