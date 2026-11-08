@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "API REST do CineTrack ? Parte 2",
+  "description": "API REST do CineTrack - Parte 2",
   "main": "server.js",
   "scripts": {
     "start": "node --env-file=.env server.js",

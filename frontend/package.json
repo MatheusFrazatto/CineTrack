@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test": "node --test src/*.test.js",
+    "test": "node --test src/*.test.js && node scripts/verificar-render.mjs && node scripts/verificar-interface.mjs",
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",

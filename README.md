@@ -1,23 +1,45 @@
 # CineTrack
 
-O CineTrack é um catálogo pessoal de filmes desenvolvido como projeto integrador da disciplina de Programação de Sistemas Web da Universidade Estadual de Maringá (UEM). Permite acompanhar filmes assistidos, em andamento ou que o usuário deseja assistir.
+O CineTrack é um catálogo pessoal de filmes desenvolvido para a disciplina de Programação de Sistemas Web da Universidade Estadual de Maringá (UEM). Permite acompanhar filmes assistidos, em andamento e que o usuário deseja assistir.
 
 ## Autoria
 
 - Aluno: [Matheus Frazatto](https://github.com/MatheusFrazatto).
 - RA: 138269.
-- Disciplina: Programação de Sistemas Web - UEM.
 - Professor: Lucas de Oliveira Teixeira.
+- Disciplina: Programação de Sistemas Web — UEM.
 
-## Desenvolvimento da versão 2.0
+## Parte 2 — React e Node
 
-A versão 2.0 será desenvolvida em React (Vite e JavaScript) e Node.js com Express, seguindo as atividades dos slides da disciplina. A entrega está prevista para **24/11/2026**, com a tag `v2.0`. As ANPs serão realizadas depois da implementação principal.
+A interface em React (Vite e JavaScript) acessa uma API REST em Node.js com Express. Os filmes ficam em `backend/data/filmes.json`, preservados após reiniciar o servidor. A pasta `parte1/` permanece igual à tag `v1.0`.
 
-A pasta `parte1/` permanece preservada como na tag `v1.0`.
+A entrega está prevista para **24/11/2026**, no mesmo repositório, com a tag **v2.0**. As ANPs 07–10 serão realizadas depois da implementação principal. O proxy TMDB é opcional e não foi incluído nesta versão.
+
+### Requisitos para executar
+
+- Node.js 24 e npm.
+- Dois terminais: um para o backend e outro para o frontend.
+- Instalar as dependências das duas pastas, inclusive para rodar os testes de integração.
+
+### Como rodar o backend
+
+Na raiz do repositório:
+
+```sh
+cd backend
+npm install
+cp .env.example .env
+npm run seed
+npm run dev
+```
+
+O comando `cp` também funciona no PowerShell como alias de `Copy-Item`. A API usa a porta definida em `backend/.env` (padrão: `http://localhost:3000`). Para iniciar sem recarga automática, use `npm start`.
+
+**O seed substitui o catálogo pelos seis filmes de exemplo.** Execute-o na preparação inicial ou quando quiser restaurar os exemplos; não é necessário repeti-lo a cada inicialização. O arquivo JSON inicial também está no repositório.
 
 ### Como rodar o frontend
 
-Com Node.js 24 LTS e npm instalados, execute na raiz do repositório:
+Em outro terminal, na raiz do repositório:
 
 ```sh
 cd frontend
@@ -25,11 +47,68 @@ npm install
 npm run dev
 ```
 
-Abra o endereço informado pelo Vite no terminal (normalmente `http://localhost:5173`). Para gerar a versão de produção, execute `npm run build` dentro de `frontend/`.
+Abra o endereço informado pelo Vite, normalmente `http://localhost:5173`. Mantenha o backend em execução. Se mudar a porta da API, copie `frontend/.env.example` para `frontend/.env`, ajuste `VITE_API_URL` e reinicie o Vite.
 
-Na Atividade 1 de React, a página apresenta o componente `Titulo`, com o nome e o subtítulo do CineTrack, e o ano atual calculado com JSX. O catálogo será componentizado na Atividade 2. O backend será acrescentado nas atividades de Node.
+Arquivos `.env` são ignorados pelo Git. Variáveis `VITE_*` são públicas: nunca devem conter senhas ou tokens.
 
-## Como executar
+### Funcionalidades
+
+- Catálogo responsivo com os seis filmes originais da disciplina.
+- Busca por título com debounce de 300 ms, combinada com filtros por status.
+- Cadastro e edição com os sete campos: título, ano, gênero, pôster, status, nota e comentário.
+- Remoção com confirmação; atualização de estado sem mutação.
+- Validação no formulário e no servidor: título e gênero obrigatórios, ano inteiro entre 1888 e 2030, status válido, nota inteira de 1 a 5 e URL de pôster HTTP/HTTPS ou vazia.
+- Pôster substituto local para imagem ausente ou indisponível.
+- Estados de carregamento, erro e lista vazia; opção de tentar carregar novamente.
+- A interface aguarda o servidor para concluir as escritas. Erros preservam a lista e os dados do formulário para nova tentativa.
+- Modal nativo com labels, foco inicial e fechamento por Escape; ações bloqueadas durante o salvamento.
+- Temas claro/escuro conforme o sistema e respeito à preferência de movimento reduzido.
+
+### API REST
+
+| Método | Rota | Resultado |
+|---|---|---|
+| GET | /filmes | Lista em JSON; aceita `?status=assistido`, `assistindo` ou `quero` |
+| GET | /filmes/:id | Filme ou 404 |
+| POST | /filmes | Cria com ID gerado pelo servidor; 201 ou 400 |
+| PUT | /filmes/:id | Atualiza preservando o ID; 200, 400 ou 404 |
+| DELETE | /filmes/:id | Remove; 204 sem corpo ou 404 |
+
+POST recebe os campos título, ano, gênero, status e nota; pôster e comentário podem ser omitidos. As chaves JSON são `titulo`, `ano`, `genero`, `status`, `nota`, `poster` e `comentario`. PUT aceita alterações parciais e valida o filme resultante. Os status usam os valores `assistido`, `assistindo` e `quero`. Respostas com corpo usam JSON; falhas de acesso ao arquivo retornam 500 e JSON malformado retorna 400. CORS está habilitado para a integração local.
+
+### Verificação e build
+
+```sh
+cd backend
+npm test
+```
+
+```sh
+cd frontend
+npm test
+npm run build
+```
+
+Os testes do backend usam arquivos temporários e verificam CRUD, códigos HTTP, validação, CORS e persistência após reinício. Os testes do frontend verificam filtragem, validação, camada de API, renderização e interações React com um servidor Express real sobre dados temporários, inclusive falhas de rede e de escrita. Não alteram o catálogo salvo do usuário.
+
+O teste de interface usa jsdom; a apresentação nativa do modal é simulada. Ele não substitui a inspeção visual, a navegação por teclado nem a conferência de foco em um navegador real.
+
+O build fica em `frontend/dist/`. Para visualizá-lo localmente, execute `npm run preview` em `frontend/` e mantenha a API ligada. O build do frontend não inclui o servidor Node.
+
+### Organização
+
+- `frontend/src/components/`: cabeçalho, filtros, lista, card, modal e rodapé.
+- `frontend/src/App.jsx`: composição, estado, efeitos e operações sobre o catálogo.
+- `frontend/src/api.js`: único módulo de comunicação com a API.
+- `backend/server.js`: início do servidor e porta de ambiente.
+- `backend/app.js`: middlewares e rotas REST.
+- `backend/repositorio.js`: leitura e gravação com módulos nativos do Node.
+- `backend/seed.js`: restauração dos seis filmes de exemplo.
+- `backend/data/filmes.json`: catálogo persistido.
+
+## Parte 1 — HTML, CSS e JavaScript
+
+### Como executar
 
 Abra **a raiz do repositório** no VS Code e use o Live Server. Acesse `parte1/index.html` para o catálogo e `exercicios/anp05/index.html` para o exercício de módulos ES6. Servir a raiz também permite que a página Sobre carregue a imagem de `docs/rascunho-tela.jpg`.
 
@@ -43,7 +122,7 @@ Depois, abra [o catálogo](http://localhost:8000/parte1/index.html) ou [o exerc�
 
 Use sempre o mesmo endereço e porta: o `localStorage` pertence à origem da página. O botão **+ Adicionar** abre o modal; `parte1/adicionar.html` também cadastra no mesmo catálogo e volta à página principal. O cadastro é tratado pelo JavaScript, sem enviar um `POST` ao servidor.
 
-## Funcionalidades
+### Funcionalidades
 
 - Cards responsivos com pôster, título, ano, gênero, nota e status.
 - Cadastro, edição e remoção sem recarregar a página; remoção com confirmação.
@@ -55,7 +134,7 @@ Use sempre o mesmo endereço e porta: o `localStorage` pertence à origem da pá
 - Tema claro/escuro conforme o sistema e estilo de impressão em papel branco, sem controles ou rodapé.
 - Página Sobre com os seis filmes canônicos da disciplina, rascunho da interface e descrição dos sete campos.
 
-## Catálogo inicial e persistência
+### Catálogo inicial e persistência
 
 A primeira visita carrega **16 filmes**: seis canônicos da disciplina e dez da coleção pessoal. **Por decisão do autor, os 16 foram mantidos na ANP 06**, embora o roteiro original peça apenas seis na primeira visita. Essa divergência está registrada em [testes-parte1.md](docs/testes-parte1.md).
 
@@ -65,7 +144,7 @@ O catálogo usa `cinetrack:filmes`, e a importação usa `cinetrack:importacao-f
 
 Os dez títulos adicionais usam dados públicos e pôsteres do MetaHub; não há consulta a uma API durante a execução. As notas iniciais podem ser editadas. A API REST de filmes está planejada para a Parte 2 em [requisitos.md](docs/requisitos.md).
 
-## Entregas das ANPs
+### Entregas das ANPs
 
 | ANP | Entrega |
 | --- | --- |
@@ -76,7 +155,7 @@ Os dez títulos adicionais usam dados públicos e pôsteres do MetaHub; não há
 | 05 | [Exercício isolado de módulos ES6](exercicios/anp05/index.html): média 4,5, contagem 3/1/2 e ordenação sem mutação. |
 | 06 | Ordenação combinada com busca/status e [roteiro com resultados reais](docs/testes-parte1.md), incluindo a divergência autorizada de 16 filmes. |
 
-## Estrutura
+### Estrutura
 
 ```text
 parte1/
@@ -96,7 +175,7 @@ exercicios/anp05/
 
 A Parte 1 mantém um `app.js` único, sem `type="module"`, como nos slides. Os módulos ES6 da ANP 05 ficam separados, sem usar ou alterar o armazenamento do aplicativo.
 
-## Verificação
+### Verificação
 
 Os testes das estatísticas podem ser executados com Node.js 22:
 
@@ -108,6 +187,6 @@ O roteiro do aplicativo, os resultados e as limitações estão em [docs/testes-
 
 A interface usa HTML semântico, rótulos nos campos, textos alternativos, foco visível e navegação por teclado. Os HTMLs foram enviados ao validador oficial W3C com autorização do autor. Os resultados Lighthouse anteriores às ANPs são históricos; o Lighthouse não foi reexecutado nesta entrega.
 
-## Tecnologias
+### Tecnologias
 
 HTML5, CSS3 e JavaScript puro, sem bibliotecas externas na aplicação. O exercício usa o executor de testes nativo do Node.js apenas para verificação.

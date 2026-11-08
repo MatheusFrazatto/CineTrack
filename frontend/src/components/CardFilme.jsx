@@ -9,7 +9,9 @@ export default function CardFilme({ filme, aoEditar, aoRemover, ocupado = false 
   return (
     <article className="card">
       <img src={filme.poster || PLACEHOLDER} alt={`Pôster de ${filme.titulo}`} loading="lazy"
-        onError={(evento) => { evento.currentTarget.onerror = null; evento.currentTarget.src = PLACEHOLDER }} />
+        onError={(evento) => {
+          if (evento.currentTarget.getAttribute('src') !== PLACEHOLDER) evento.currentTarget.src = PLACEHOLDER
+        }} />
       <h2>{filme.titulo}</h2>
       <p>{filme.ano} · {filme.genero}</p>
       <span className={`badge ${filme.status}`}>{ROTULOS[filme.status]}</span>
