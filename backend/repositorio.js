@@ -9,4 +9,8 @@ function lerFilmes(arquivo = ARQUIVO) {
   return filmes
 }
 
-module.exports = { ARQUIVO, lerFilmes }
+function salvarFilmes(lista, arquivo = ARQUIVO) {
+  fs.writeFileSync(arquivo, JSON.stringify(lista, null, 2) + '\n', 'utf8')
+}
+
+module.exports = { ARQUIVO, lerFilmes, salvarFilmes }
