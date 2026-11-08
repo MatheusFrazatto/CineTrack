@@ -9,6 +9,26 @@ O CineTrack é um catálogo pessoal de filmes desenvolvido como projeto integrad
 - Disciplina: Programação de Sistemas Web - UEM.
 - Professor: Lucas de Oliveira Teixeira.
 
+## Desenvolvimento da versão 2.0
+
+A versão 2.0 será desenvolvida em React (Vite e JavaScript) e Node.js com Express, seguindo as atividades dos slides da disciplina. A entrega está prevista para **24/11/2026**, com a tag `v2.0`. As ANPs serão realizadas depois da implementação principal.
+
+A pasta `parte1/` permanece preservada como na tag `v1.0`.
+
+### Como rodar o frontend
+
+Com Node.js 24 LTS e npm instalados, execute na raiz do repositório:
+
+```sh
+cd frontend
+npm install
+npm run dev
+```
+
+Abra o endereço informado pelo Vite no terminal (normalmente `http://localhost:5173`). Para gerar a versão de produção, execute `npm run build` dentro de `frontend/`.
+
+Na Atividade 1 de React, a página apresenta o componente `Titulo`, com o nome e o subtítulo do CineTrack, e o ano atual calculado com JSX. O catálogo será componentizado na Atividade 2. O backend será acrescentado nas atividades de Node.
+
 ## Como executar
 
 Abra **a raiz do repositório** no VS Code e use o Live Server. Acesse `parte1/index.html` para o catálogo e `exercicios/anp05/index.html` para o exercício de módulos ES6. Servir a raiz também permite que a página Sobre carregue a imagem de `docs/rascunho-tela.jpg`.
