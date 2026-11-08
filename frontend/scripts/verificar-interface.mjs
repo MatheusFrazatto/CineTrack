@@ -28,6 +28,8 @@ const enviar = () => act(async () => document.querySelector('form').dispatchEven
 try {
   const { default: App } = await server.ssrLoadModule('/src/App.jsx')
   await act(async () => root.render(createElement(App)))
+  assert.match(document.querySelector('main').textContent, /Carregando filmes/)
+  await act(async () => new Promise((resolve) => setTimeout(resolve, 550)))
   assert.equal(document.querySelectorAll('.card').length, 6)
   await click('[aria-label="Adicionar filme"]')
   await enviar()
