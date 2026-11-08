@@ -1,111 +1,469 @@
+/*
+Cores Base:
+    Primária: #2D3142
+    Acento:   #C0392B
+    Neutro:   #F7F7F7 (fundo) e #333333 (texto)
+*/
+
+/* 1. Variáveis Globais (:root) */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --cor-fundo: #f7f7f7;
+  --cor-card: #ffffff;
+  --cor-texto: #2D3142;
+  --cor-texto-secundario: #555555;
+  --cor-primaria: #2D3142;
+  --cor-acento: #C0392B;
+  --cor-acento-hover: #A93226;
+  --cor-borda: #dddddd;
+  --cor-input-fundo: #ffffff;
+  --cor-texto-inverso: #ffffff;
+  --cor-foco: #4A90E2;
+  --cor-sucesso: #2E7D32;
+  --cor-erro: #a93226;
+  --cor-sombra: rgba(0, 0, 0, 0.1);
+  --cor-sombra-modal: rgba(0, 0, 0, 0.3);
+  --cor-overlay: rgba(0, 0, 0, 0.5);
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --raio: 8px;
+  --raio-sm: 4px;
+  --raio-lg: 12px;
+  --raio-pilula: 999px;
+  --espaco: 16px;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Cores semânticas dos badges (Tema Claro) */
+  --badge-assistido-bg: #e6f4ea;
+  --badge-assistido-texto: #137333;
+  --badge-assistindo-bg: #e8f0fe;
+  --badge-assistindo-texto: #1967d2;
+  --badge-quero-bg: #fef7e0;
+  --badge-quero-texto: #9c4f00;
+}
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+/* 2. Tema Escuro Automático (Dark Mode) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cor-fundo: #121212;
+    --cor-card: #1e1e1e;
+    --cor-texto: #f3f3f3;
+    --cor-texto-secundario: #aaaaaa;
+    --cor-primaria: #1e2230;
+    --cor-acento: #C0392B;
+    --cor-acento-hover: #A93226;
+    --cor-borda: #333333;
+    --cor-input-fundo: #252525;
+    --cor-foco: #8AB4F8;
+    --cor-sucesso: #81C995;
+    --cor-erro: #ffb4ab;
+    --cor-sombra: rgba(0, 0, 0, 0.3);
+    --cor-sombra-modal: rgba(0, 0, 0, 0.55);
+    --cor-overlay: rgba(0, 0, 0, 0.7);
+
+    /* Cores semânticas dos badges (Tema Escuro) */
+    --badge-assistido-bg: #133924;
+    --badge-assistido-texto: #81c995;
+    --badge-assistindo-bg: #17325c;
+    --badge-assistindo-texto: #8ab4f8;
+    --badge-quero-bg: #4a3800;
+    --badge-quero-texto: #fdd663;
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* 3. Reset Global */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html {
+  font-size: 16px;
 }
 
 body {
-  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
 }
 
-#root {
-  width: 1126px;
+img {
   max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  display: block;
+}
+
+/* Estilo e transições padrão de botões */
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: var(--raio-sm);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, outline 0.2s ease, transform 0.15s ease;
+}
+
+button:hover {
+  background: var(--cor-primaria);
+  color: var(--cor-texto-inverso);
+}
+
+button:active {
+  filter: brightness(0.85);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 2px;
+}
+
+/* 4. Estilo do Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco);
+  flex-wrap: wrap;
+  background: var(--cor-primaria);
+  color: var(--cor-texto-inverso);
+  padding: 12px var(--espaco);
+}
+
+header h1 {
+  flex: 0 0 auto;
+  font-size: clamp(1.4rem, 2vw + 1rem, 2.2rem);
+}
+
+header input {
+  flex: 1 1 240px;
+  padding: 6px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  background-color: var(--cor-input-fundo);
+  color: var(--cor-texto);
+}
+
+header button,
+.btn-salvar {
+  background: var(--cor-acento);
+  color: var(--cor-texto-inverso);
+  border: none;
+  padding: 8px var(--espaco);
+  border-radius: 6px;
+}
+
+header button:hover,
+.btn-salvar:hover {
+  background: var(--cor-acento-hover);
+  color: var(--cor-texto-inverso);
+}
+
+.link-voltar {
+  color: var(--cor-texto-inverso);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.link-voltar:hover {
+  text-decoration: underline;
+}
+
+/* Rótulos responsivos do botão de adicionar */
+.rotulo-completo {
+  display: none;
+}
+
+.rotulo-curto {
+  display: inline;
+}
+
+/* 5. Filtros de Navegação */
+nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 24px;
+}
+
+nav button {
+  padding: 6px 14px;
+  border: 1px solid var(--cor-primaria);
+  background: var(--cor-card);
+  border-radius: var(--raio-pilula);
+  color: var(--cor-texto);
+}
+
+nav button.ativo {
+  background: var(--cor-primaria);
+  color: var(--cor-texto-inverso);
+}
+
+/* 6. Grade de Cards (Grid Responsivo) */
+#lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--espaco);
+  padding: var(--espaco) 24px;
+}
+
+.card {
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  gap: 6px;
+  background: var(--cor-card);
+  padding: var(--espaco);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: 0 1px 4px var(--cor-sombra);
+  color: var(--cor-texto);
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
+.card img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.card h2 {
+  font-size: 1.15rem;
+  margin-top: 4px;
+  color: var(--cor-texto);
+}
+
+.card p {
+  font-size: 0.9rem;
+  color: var(--cor-texto-secundario);
+}
+
+/* Badges e variações semânticas */
+.card .badge {
+  display: inline-block;
+  align-self: flex-start;
+  border-radius: var(--raio-pilula);
+  padding: 4px 12px;
+  font-size: 0.85rem;
   font-weight: 500;
-  color: var(--text-h);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+.badge.assistido {
+  background-color: var(--badge-assistido-bg);
+  color: var(--badge-assistido-texto);
+}
+
+.badge.assistindo {
+  background-color: var(--badge-assistindo-bg);
+  color: var(--badge-assistindo-texto);
+}
+
+.badge.quero {
+  background-color: var(--badge-quero-bg);
+  color: var(--badge-quero-texto);
+}
+
+.card .acoes {
+  margin-top: auto;
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.card .acoes button {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-card);
+  color: var(--cor-texto);
+  border-radius: var(--raio-sm);
+  font-size: 0.85rem;
+}
+
+.card .acoes button:hover {
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-texto-inverso);
+}
+
+/* 7. Estilos de Formulário (Modal e adicionar.html) */
+.pagina-adicionar {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco);
+  margin-top: var(--espaco);
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.erros-formulario {
+  padding: 12px;
+  border: 1px solid var(--cor-erro);
+  border-radius: var(--raio-sm);
+  color: var(--cor-erro);
+  overflow-wrap: anywhere;
+}
+
+.erros-formulario[hidden] {
+  display: none;
+}
+
+.erros-formulario ul {
+  padding-left: 16px;
+}
+
+.erros-formulario:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 3px;
+}
+
+form label {
+  font-size: 0.95rem;
+  color: var(--cor-texto);
+}
+
+form input,
+form select,
+form textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  background-color: var(--cor-input-fundo);
+  color: var(--cor-texto);
+  font: inherit;
+  transition: border-color 0.2s ease, outline 0.2s ease;
+}
+
+form input:focus-visible,
+form select:focus-visible,
+form textarea:focus-visible {
+  outline: 2px solid var(--cor-acento);
+  outline-offset: 1px;
+}
+
+/* Pseudo-classes de validação do formulário */
+input:required {
+  border-left: 3px solid var(--cor-acento);
+}
+
+input:invalid:not(:placeholder-shown) {
+  border-color: var(--cor-acento);
+}
+
+input:valid {
+  border-color: var(--cor-sucesso);
+}
+
+.form-acoes {
+  display: flex;
+  flex-direction: row !important;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-cancelar {
+  flex: 1;
+  padding: 8px var(--espaco);
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-card);
+  color: var(--cor-texto);
+}
+
+/* 8. Estrutura e Animação do Modal */
+#modal {
+  position: fixed;
+  inset: 0;
+  background: var(--cor-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* Garante que o display: flex não quebre o atributo hidden */
+#modal[hidden] {
+  display: none;
+}
+
+.modal-conteudo {
+  background: var(--cor-card);
+  color: var(--cor-texto);
+  padding: 24px;
+  border-radius: var(--raio-lg);
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px var(--cor-sombra-modal);
+  animation: aparecer 200ms ease;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+/* 9. Rodapé */
+footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 24px;
+  border-top: 1px solid var(--cor-borda);
+  padding: 24px;
+  text-align: center;
+  color: var(--cor-texto-secundario);
+}
+
+footer .resumo-catalogo {
+  display: block;
+  margin-top: 8px;
+}
+
+footer a {
+  color: var(--cor-texto);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+footer a:hover {
+  text-decoration-thickness: 2px;
+}
+
+footer a:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 3px;
+}
+
+/* 10. Media Query para Telas Maiores (>= 1024px) */
+@media (min-width: 1024px) {
+  .rotulo-curto {
+    display: none;
   }
-}
-p {
-  margin: 0;
-}
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+  .rotulo-completo {
+    display: inline;
+  }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  #lista {
+    gap: 24px;
+    padding: 24px 32px;
+  }
 }
