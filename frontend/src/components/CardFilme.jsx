@@ -5,7 +5,7 @@ function estrelas(nota) {
   return '★'.repeat(nota) + '☆'.repeat(5 - nota)
 }
 
-export default function CardFilme({ filme }) {
+export default function CardFilme({ filme, aoEditar, aoRemover, ocupado = false }) {
   return (
     <article className="card">
       <img src={filme.poster || PLACEHOLDER} alt={`Pôster de ${filme.titulo}`} loading="lazy"
@@ -16,8 +16,8 @@ export default function CardFilme({ filme }) {
       <p aria-label={`Nota: ${filme.nota} de 5 estrelas`}>{estrelas(filme.nota)}</p>
       {filme.comentario && <p className="comentario">{filme.comentario}</p>}
       <div className="acoes">
-        <button type="button" disabled>Editar</button>
-        <button type="button" disabled>Remover</button>
+        <button type="button" disabled={ocupado} onClick={() => aoEditar(filme)} aria-label={`Editar ${filme.titulo}`}>Editar</button>
+        <button type="button" disabled={ocupado} onClick={() => aoRemover(filme.id)} aria-label={`Remover ${filme.titulo}`}>Remover</button>
       </div>
     </article>
   )

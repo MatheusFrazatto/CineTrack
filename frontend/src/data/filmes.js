@@ -60,3 +60,7 @@ export const filmesIniciais = [
     "comentario": "Um retrato intenso e marcante da realidade brasileira."
   }
 ]
+
+export function gerarId(lista) {
+  return Math.max(0, ...lista.map((filme) => filme.id)) + 1
+}
