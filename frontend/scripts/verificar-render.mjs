@@ -16,6 +16,16 @@ try {
   assert.match(html, /aria-label="Buscar filme"/)
   assert.match(html, /Carregando filmes/)
   assert.match(renderToStaticMarkup(createElement(ListaFilmes, { filmes: [] })), /Nenhum filme encontrado/)
+  const { default: Estrelas } = await server.ssrLoadModule('/src/components/Estrelas.jsx')
+  const { default: Badge } = await server.ssrLoadModule('/src/components/Badge.jsx')
+  for (const [nota, simbolos] of [[1, '★☆☆☆☆'], [3, '★★★☆☆'], [5, '★★★★★']]) {
+    const estrelas = renderToStaticMarkup(createElement(Estrelas, { nota }))
+    assert.ok(estrelas.includes(simbolos))
+    assert.ok(estrelas.includes(`Nota: ${nota} de 5 estrelas`))
+  }
+  for (const [status, rotulo] of [['assistido', 'Assistido'], ['assistindo', 'Assistindo'], ['quero', 'Quero assistir']]) {
+    assert.equal(renderToStaticMarkup(createElement(Badge, { status })), `<span class="badge ${status}">${rotulo}</span>`)
+  }
   console.log('Renderização: seis cards, cabeçalho, rodapé e estado vazio validados.')
 } finally {
   await server.close()

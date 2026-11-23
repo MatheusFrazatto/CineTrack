@@ -99,6 +99,7 @@ export default function App() {
       <Header busca={busca} aoBuscar={setBusca} aoAdicionar={() => setEditando({})} ocupado={carregando || Boolean(erro) || ocupado} />
       <Filtros ativo={status} aoMudar={setStatus} ordem={ordem} aoOrdenar={setOrdem} />
       <main aria-busy={carregando}>
+        {!carregando && !erro && <p className="contador-resultados" role="status">Exibindo {visiveis.length} de {filmes.length} filmes</p>}
         {erroAcao && <p className="mensagem erros-formulario" role="alert">{erroAcao}</p>}
         {carregando ? <p className="mensagem" role="status">Carregando filmes...</p> : erro ? (
           <div className="mensagem" role="alert"><p>{erro}</p><button type="button" onClick={() => setTentativa((valor) => valor + 1)}>Tentar novamente</button></div>

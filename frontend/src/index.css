@@ -651,6 +651,7 @@ dialog::backdrop { background: var(--cor-overlay); }
 form fieldset { border: 0; display: flex; flex-direction: column; gap: var(--espaco); min-width: 0; }
 form fieldset > div { display: flex; flex-direction: column; gap: 4px; }
 .mensagem { padding: 24px; }
+.contador-resultados { margin: 16px 24px; color: var(--cor-texto-secundario); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }

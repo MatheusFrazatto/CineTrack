@@ -1,9 +1,7 @@
-const ROTULOS = { assistido: 'Assistido', assistindo: 'Assistindo', quero: 'Quero assistir' }
-const PLACEHOLDER = '/poster-placeholder.svg'
+import Estrelas from './Estrelas.jsx'
+import Badge from './Badge.jsx'
 
-function estrelas(nota) {
-  return '★'.repeat(nota) + '☆'.repeat(5 - nota)
-}
+const PLACEHOLDER = '/poster-placeholder.svg'
 
 export default function CardFilme({ filme, aoEditar, aoRemover, ocupado = false }) {
   return (
@@ -14,8 +12,8 @@ export default function CardFilme({ filme, aoEditar, aoRemover, ocupado = false 
         }} />
       <h2>{filme.titulo}</h2>
       <p>{filme.ano} · {filme.genero}</p>
-      <span className={`badge ${filme.status}`}>{ROTULOS[filme.status]}</span>
-      <p aria-label={`Nota: ${filme.nota} de 5 estrelas`}>{estrelas(filme.nota)}</p>
+      <Badge status={filme.status} />
+      <Estrelas nota={filme.nota} />
       {filme.comentario && <p className="comentario">{filme.comentario}</p>}
       <div className="acoes">
         <button type="button" disabled={ocupado} onClick={() => aoEditar(filme)} aria-label={`Editar ${filme.titulo}`}>Editar</button>
