@@ -12,7 +12,8 @@ async function pedir(caminho, opcoes = {}) {
   }
   if (!resposta.ok) {
     const dados = await resposta.json().catch(() => null)
-    throw new Error(dados?.erro || `Falha na requisição (HTTP ${resposta.status}).`)
+    const erros = Array.isArray(dados?.erros) ? dados.erros.filter((erro) => typeof erro === 'string') : []
+    throw new Error(erros.join(' ') || dados?.erro || `Falha na requisição (HTTP ${resposta.status}).`)
   }
   if (resposta.status === 204) return null
   try {

@@ -60,7 +60,7 @@ function criarApp({ arquivo = ARQUIVO, log = true } = {}) {
     if (!corpoValido(req.body)) return res.status(400).json({ erro: 'Envie um objeto JSON com os dados do filme.' })
     const dados = { poster: '', comentario: '', ...selecionarCampos(req.body) }
     const validacao = validarFilme(dados)
-    if (!validacao.valido) return res.status(400).json({ erro: validacao.erros.join(' ') })
+    if (!validacao.valido) return res.status(400).json({ erros: validacao.erros, erro: validacao.erros.join(' ') })
     const lista = lerFilmes(arquivo)
     const id = Math.max(0, ...lista.map((filme) => filme.id)) + 1
     const novo = { ...normalizar(dados), id }
@@ -76,7 +76,7 @@ function criarApp({ arquivo = ARQUIVO, log = true } = {}) {
     if (!corpoValido(req.body)) return res.status(400).json({ erro: 'Envie um objeto JSON com os dados do filme.' })
     const dados = { ...original, ...selecionarCampos(req.body), id }
     const validacao = validarFilme(dados)
-    if (!validacao.valido) return res.status(400).json({ erro: validacao.erros.join(' ') })
+    if (!validacao.valido) return res.status(400).json({ erros: validacao.erros, erro: validacao.erros.join(' ') })
     const atualizado = normalizar(dados)
     salvarFilmes(lista.map((filme) => filme.id === id ? atualizado : filme), arquivo)
     res.json(atualizado)

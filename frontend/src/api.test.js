@@ -31,3 +31,8 @@ test('falha de rede e resposta malformada produzem mensagens compreensíveis', a
   globalThis.fetch = async () => new Response('{quebrado', { status: 200 })
   await assert.rejects(listar(), /resposta inválida/)
 })
+
+test('expõe todos os erros de validação retornados na lista da API', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ erros: ['Selecione um status válido.', 'Informe uma nota inteira de 1 a 5.'] }, { status: 400 }))
+  await assert.rejects(criar({}), (erro) => /status/.test(erro.message) && /nota.*1.*5/.test(erro.message))
+})

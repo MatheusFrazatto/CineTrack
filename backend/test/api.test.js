@@ -79,6 +79,20 @@ test('arquivo corrompido retorna 500 JSON sem sobrescrever os dados', async (t) 
 const opcoes = (method, body) => ({ method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
 const dadosValidos = { titulo: 'Novo filme', ano: 2020, genero: 'Drama', poster: '', status: 'quero', nota: 3, comentario: '' }
 
+test('POST e PUT devolvem todos os erros de nota e status sem alterar o arquivo', async (t) => {
+  const { base, arquivo } = await preparar(t)
+  const antes = fs.readFileSync(arquivo, 'utf8')
+  for (const [metodo, rota] of [['POST', '/filmes'], ['PUT', '/filmes/1']]) {
+    const resposta = await fetch(base + rota, opcoes(metodo, { ...dadosValidos, nota: 7, status: 'inventado' }))
+    assert.equal(resposta.status, 400)
+    const dados = await resposta.json()
+    assert.equal(dados.erros.length, 2)
+    assert.ok(dados.erros.some((erro) => /nota.*1.*5/i.test(erro)))
+    assert.ok(dados.erros.some((erro) => /status/i.test(erro)))
+    assert.equal(fs.readFileSync(arquivo, 'utf8'), antes)
+  }
+})
+
 test('POST valida dados, ignora ID do cliente e persiste antes da resposta 201', async (t) => {
   const { arquivo, base } = await preparar(t)
   const antes = fs.readFileSync(arquivo, 'utf8')

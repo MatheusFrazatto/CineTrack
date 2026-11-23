@@ -29,6 +29,9 @@ globalThis.fetch = async (url, opcoes = {}) => {
   }
   if (modo === 'rede-erro') throw new TypeError('Failed to fetch')
   if (opcoes.method && modo === 'escrita-erro') return Response.json({ erro: 'Falha de gravação simulada.' }, { status: 400 })
+  if (opcoes.method && modo === 'validacao-servidor') {
+    opcoes = { ...opcoes, body: JSON.stringify({ ...JSON.parse(opcoes.body), nota: 7, status: 'inventado' }) }
+  }
   if (opcoes.method && modo === 'escrita-pendente') await new Promise((resolve) => { liberarEscrita = resolve })
   return fetchReal(base + destino.pathname + destino.search, opcoes)
 }
@@ -123,6 +126,12 @@ try {
   assert.match(document.querySelector('[role="alert"]').textContent, /Falha de gravação/)
   assert.ok(document.querySelector('[aria-label="Editar Filme de teste"]'))
   assert.ok(document.querySelector('dialog'))
+  modo = 'validacao-servidor'
+  await enviar()
+  await esperar(() => /nota.*1.*5/i.test(document.querySelector('[role="alert"]')?.textContent || ''))
+  assert.match(document.querySelector('[role="alert"]').textContent, /status/)
+  assert.equal(document.querySelector('#titulo').value, 'Filme editado')
+  assert.ok(document.querySelector('[aria-label="Editar Filme de teste"]'))
   modo = 'normal'
   await enviar()
   await esperar(() => document.querySelector('[aria-label="Editar Filme editado"]'))
