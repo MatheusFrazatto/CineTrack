@@ -8,6 +8,7 @@ import ModalFilme from './components/ModalFilme.jsx'
 import { listar, criar, atualizar, remover } from './api.js'
 import { ordenarFilmes } from './ordenarFilmes.js'
 import Sobre from './components/Sobre.jsx'
+import { lerFiltros } from './filtrosPersistentes.js'
 
 export default function App() {
   const [filmes, setFilmes] = useState([])
@@ -18,9 +19,9 @@ export default function App() {
   const [erroAcao, setErroAcao] = useState(null)
   const operacao = useRef(false)
   const [editando, setEditando] = useState(null)
-  const [status, setStatus] = useState('todos')
-  const [busca, setBusca] = useState('')
-  const [buscaAplicada, setBuscaAplicada] = useState('')
+  const [status, setStatus] = useState(() => lerFiltros().status)
+  const [busca, setBusca] = useState(() => lerFiltros().busca)
+  const [buscaAplicada, setBuscaAplicada] = useState(busca)
   const [ordem, setOrdem] = useState('titulo')
   const [pagina, setPagina] = useState('catalogo')
 
@@ -53,6 +54,14 @@ export default function App() {
     const timer = setTimeout(() => setBuscaAplicada(busca), 300)
     return () => clearTimeout(timer)
   }, [busca])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('cinetrack:filtros', JSON.stringify({ busca, status }))
+    } catch {
+      // A busca e os filtros continuam funcionando quando o armazenamento está bloqueado.
+    }
+  }, [busca, status])
 
   const visiveis = ordenarFilmes(filtrarFilmes(filmes, status, buscaAplicada), ordem)
 
