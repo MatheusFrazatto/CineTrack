@@ -13,7 +13,7 @@ O CineTrack é um catálogo pessoal de filmes desenvolvido para a disciplina de 
 
 A interface em React (Vite e JavaScript) acessa uma API REST em Node.js com Express. Os filmes ficam em `backend/data/filmes.json`, preservados após reiniciar o servidor. A pasta `parte1/` permanece igual à tag `v1.0`.
 
-A entrega está prevista para **24/11/2026**, no mesmo repositório, com a tag **v2.0**. As ANPs 07–10 serão realizadas depois da implementação principal. O proxy TMDB é opcional e não foi incluído nesta versão.
+A entrega está prevista para **24/11/2026**, no mesmo repositório, com a tag **v2.0**. As ANPs 07 a 10 complementam a implementação com componentes, preferências persistentes, consultas e validação documentadas abaixo. O proxy TMDB é opcional e não foi incluído nesta versão.
 
 ### Requisitos para executar
 
@@ -55,6 +55,8 @@ Arquivos `.env` são ignorados pelo Git. Variáveis `VITE_*` são públicas: nun
 
 - Catálogo responsivo com os seis filmes originais da disciplina.
 - Busca por título com debounce de 300 ms, combinada com filtros por status.
+- Busca e status preservados ao recarregar, em `cinetrack:filtros`; contador derivado de resultados visíveis e total.
+- Estrelas e Badge como componentes próprios, usados pelos cards.
 - Ordenação por título em português, ano mais recente ou maior nota, preservada ao buscar, filtrar e alterar o catálogo.
 - Cadastro e edição com os sete campos: título, ano, gênero, pôster, status, nota e comentário.
 - Remoção com confirmação; atualização de estado sem mutação.
@@ -71,13 +73,27 @@ Arquivos `.env` são ignorados pelo Git. Variáveis `VITE_*` são públicas: nun
 
 | Método | Rota | Resultado |
 |---|---|---|
-| GET | /filmes | Lista em JSON; aceita `?status=assistido`, `assistindo` ou `quero` |
+| GET | /filmes | Lista em JSON; aceita `?q=` por título e `?status=assistido`, `assistindo` ou `quero`, combinados |
 | GET | /filmes/:id | Filme ou 404 |
+| GET | /stats | Total, contagem por status e média das notas com uma casa decimal |
 | POST | /filmes | Cria com ID gerado pelo servidor; 201 ou 400 |
 | PUT | /filmes/:id | Atualiza preservando o ID; 200, 400 ou 404 |
 | DELETE | /filmes/:id | Remove; 204 sem corpo ou 404 |
 
 POST recebe os campos título, ano, gênero, status e nota; pôster e comentário podem ser omitidos. As chaves JSON são `titulo`, `ano`, `genero`, `status`, `nota`, `poster` e `comentario`. PUT aceita alterações parciais e valida o filme resultante. Os status usam os valores `assistido`, `assistindo` e `quero`. Respostas com corpo usam JSON; falhas de acesso ao arquivo retornam 500 e JSON malformado retorna 400. CORS está habilitado para a integração local.
+
+Falhas de validação devolvem 400 com todos os problemas no array `erros`. A interface exibe as mensagens e preserva o formulário. Consulte os corpos, parâmetros e códigos de cada rota em [docs/api.md](docs/api.md).
+
+### ANPs 07 a 10
+
+| ANP | Entrega | Commit exigido |
+| --- | --- | --- |
+| 07 | Componentes Estrelas e Badge; contador sem estado adicional | `refactor: componentes estrelas e badge` |
+| 08 | Inicializadores preguiçosos, efeito `[busca, status]` e restauração segura de filtros | `feat: filtros persistentes` |
+| 09 | Busca por título na API e estatísticas com `reduce` | `feat: rotas de busca e stats` |
+| 10 | Lista de erros de validação, documentação da API e testes do clone/CRUD/persistência | Commits de validação, testes e documentação; tag `v2.0` final |
+
+O registro dos procedimentos, resultados reais e conferências manuais está em [docs/testes-parte2.md](docs/testes-parte2.md).
 
 ### Verificação e build
 
@@ -93,6 +109,8 @@ npm run build
 ```
 
 Os testes do backend usam arquivos temporários e verificam CRUD, códigos HTTP, validação, CORS e persistência após reinício. Os testes do frontend verificam filtragem, validação, camada de API, renderização e interações React com um servidor Express real sobre dados temporários, inclusive falhas de rede e de escrita. Não alteram o catálogo salvo do usuário.
+
+A integração também cadastra, edita e remove pela interface, encerra o processo Node, inicia outro e recarrega o App para conferir os dados persistidos. Verifica o contador e a restauração dos filtros, incluindo JSON corrompido.
 
 O teste de interface usa jsdom; a apresentação nativa do modal é simulada. Ele não substitui a inspeção visual, a navegação por teclado nem a conferência de foco em um navegador real.
 
