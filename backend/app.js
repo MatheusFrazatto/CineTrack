@@ -29,7 +29,25 @@ function criarApp({ arquivo = ARQUIVO, log = true } = {}) {
   app.get('/filmes', (req, res) => {
     let lista = lerFilmes(arquivo)
     if (req.query.status) lista = lista.filter((filme) => filme.status === req.query.status)
+    if (typeof req.query.q === 'string') {
+      const busca = req.query.q.toLowerCase()
+      lista = lista.filter((filme) => filme.titulo.toLowerCase().includes(busca))
+    }
     res.json(lista)
+  })
+
+  app.get('/stats', (req, res) => {
+    const lista = lerFilmes(arquivo)
+    const resumo = lista.reduce((acumulado, filme) => {
+      acumulado.porStatus[filme.status] += 1
+      acumulado.somaNotas += filme.nota
+      return acumulado
+    }, { porStatus: { assistido: 0, assistindo: 0, quero: 0 }, somaNotas: 0 })
+    res.json({
+      total: lista.length,
+      porStatus: resumo.porStatus,
+      mediaNotas: lista.length ? Number((resumo.somaNotas / lista.length).toFixed(1)) : 0,
+    })
   })
 
   app.get('/filmes/:id', (req, res) => {

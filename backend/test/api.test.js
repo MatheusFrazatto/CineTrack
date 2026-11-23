@@ -42,6 +42,31 @@ test('GET devolve 404 JSON para ID inexistente e rota desconhecida', async (t) =
   }
 })
 
+test('busca por título ignora caixa e combina substring com status', async (t) => {
+  const { base } = await preparar(t)
+  const buscar = async (query) => (await (await fetch(base + '/filmes' + query)).json()).map((filme) => filme.titulo)
+  assert.deepEqual(await buscar('?q=DU'), ['Duna: Parte Dois'])
+  assert.deepEqual(await buscar('?q=a&status=quero'), ['Interestelar', 'Cidade de Deus'])
+  assert.deepEqual(await buscar('?q=du&status=assistido'), [])
+  assert.deepEqual(await buscar('?q=sem-correspondencia'), [])
+  assert.equal((await buscar('?q=')).length, 6)
+})
+
+test('stats resume o seed e acompanha alterações e catálogo vazio', async (t) => {
+  const { base, arquivo } = await preparar(t)
+  const stats = async () => {
+    const resposta = await fetch(base + '/stats')
+    assert.equal(resposta.status, 200)
+    assert.match(resposta.headers.get('content-type'), /application\/json/)
+    return resposta.json()
+  }
+  assert.deepEqual(await stats(), { total: 6, porStatus: { assistido: 3, assistindo: 1, quero: 2 }, mediaNotas: 4.5 })
+  await fetch(base + '/filmes/1', opcoes('PUT', { status: 'quero', nota: 1 }))
+  assert.deepEqual(await stats(), { total: 6, porStatus: { assistido: 2, assistindo: 1, quero: 3 }, mediaNotas: 3.8 })
+  fs.writeFileSync(arquivo, '[]')
+  assert.deepEqual(await stats(), { total: 0, porStatus: { assistido: 0, assistindo: 0, quero: 0 }, mediaNotas: 0 })
+})
+
 test('arquivo corrompido retorna 500 JSON sem sobrescrever os dados', async (t) => {
   const { arquivo, base } = await preparar(t)
   fs.writeFileSync(arquivo, '{invalido')
