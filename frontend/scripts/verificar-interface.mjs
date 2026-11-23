@@ -6,16 +6,31 @@ import os from 'node:os'
 import path from 'node:path'
 import { createRequire } from 'node:module'
 import { once } from 'node:events'
+import { spawn } from 'node:child_process'
 
 const require = createRequire(import.meta.url)
-const { criarApp } = require('../../backend/app.js')
 const { popular } = require('../../backend/seed.js')
 const pasta = fs.mkdtempSync(path.join(os.tmpdir(), 'cinetrack-integracao-'))
 const arquivo = path.join(pasta, 'filmes.json')
 popular(arquivo)
-const backend = criarApp({ arquivo, log: false }).listen(0, '127.0.0.1')
-await once(backend, 'listening')
-const base = `http://127.0.0.1:${backend.address().port}`
+async function iniciarBackend() {
+  const processo = spawn(process.execPath, ['-e', `
+    const { criarApp } = require(process.argv[1])
+    const servidor = criarApp({ arquivo: process.argv[2], log: false }).listen(0, '127.0.0.1', () => {
+      process.send(servidor.address().port)
+    })
+    process.on('message', () => servidor.close(() => process.exit(0)))
+  `, require.resolve('../../backend/app.js'), arquivo], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'], windowsHide: true })
+  const [porta] = await once(processo, 'message')
+  return { processo, base: `http://127.0.0.1:${porta}` }
+}
+async function encerrarBackend() {
+  if (backend.processo.exitCode !== null) return
+  const encerrado = once(backend.processo, 'exit')
+  backend.processo.send('encerrar')
+  await encerrado
+}
+let backend = await iniciarBackend()
 const fetchReal = globalThis.fetch
 let modo = 'carga-erro'
 let liberarEscrita
@@ -33,7 +48,7 @@ globalThis.fetch = async (url, opcoes = {}) => {
     opcoes = { ...opcoes, body: JSON.stringify({ ...JSON.parse(opcoes.body), nota: 7, status: 'inventado' }) }
   }
   if (opcoes.method && modo === 'escrita-pendente') await new Promise((resolve) => { liberarEscrita = resolve })
-  return fetchReal(base + destino.pathname + destino.search, opcoes)
+  return fetchReal(backend.base + destino.pathname + destino.search, opcoes)
 }
 
 const dom = new JSDOM('<!doctype html><html><body><div id="root"></div></body></html>', { url: 'http://localhost:5173' })
@@ -192,6 +207,35 @@ try {
   await esperar(() => !document.querySelector('main').textContent.includes('Carregando filmes'))
   assert.deepEqual(titulos(), ['Duna: Parte Dois'])
   assert.equal(document.querySelector('.contador-resultados').textContent, 'Exibindo 1 de 6 filmes')
+  await preencher('input[type="search"]', '')
+  await click('nav button:nth-child(1)')
+  await esperar(() => document.querySelectorAll('.card').length === 6)
+  await click('[aria-label="Adicionar filme"]')
+  await preencher('#titulo', 'Persistência ANP 10')
+  await preencher('#ano', '2021')
+  await preencher('#genero', 'Drama')
+  await enviar()
+  await esperar(() => document.querySelectorAll('.card').length === 7)
+  await click('[aria-label="Editar Persistência ANP 10"]')
+  await preencher('#titulo', 'Persistido após reinício')
+  await enviar()
+  await esperar(() => document.querySelector('[aria-label="Editar Persistido após reinício"]'))
+  await click('[aria-label="Remover Cidade de Deus"]')
+  await esperar(() => document.querySelectorAll('.card').length === 6)
+  const pidAnterior = backend.processo.pid
+  await encerrarBackend()
+  backend = await iniciarBackend()
+  assert.notEqual(backend.processo.pid, pidAnterior)
+  await act(async () => root.unmount())
+  root = createRoot(document.querySelector('#root'))
+  await act(async () => root.render(createElement(App)))
+  await esperar(() => document.querySelectorAll('.card').length === 6)
+  assert.ok(document.querySelector('[aria-label="Editar Persistido após reinício"]'))
+  assert.equal(document.querySelector('[aria-label="Editar Cidade de Deus"]'), null)
+  const persistidos = JSON.parse(fs.readFileSync(arquivo, 'utf8'))
+  assert.ok(persistidos.some((filme) => filme.titulo === 'Persistido após reinício'))
+  assert.ok(persistidos.every((filme) => filme.titulo !== 'Cidade de Deus'))
+  console.log('Persistência: cadastro, edição e remoção pela interface sobreviveram à troca do processo Node.')
   await act(async () => root.unmount())
   fs.writeFileSync(arquivo, '[]')
   root = createRoot(document.querySelector('#root'))
@@ -216,7 +260,7 @@ try {
 } finally {
   await act(async () => root.unmount())
   await server.close()
-  await new Promise((resolve) => backend.close(resolve))
+  await encerrarBackend()
   globalThis.fetch = fetchReal
   fs.rmSync(pasta, { recursive: true, force: true })
   dom.window.close()
